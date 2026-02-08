@@ -1,19 +1,19 @@
 from schema import GraphOutput
 
-def rag_node(state, llm):
-    message = state["message"]
+def rag_node(state: dict, llm):
+    response = llm.invoke(
+        f"Answer the guest question clearly:\n{state['message']}"
+    )
 
-    response = llm.invoke(f"""
-        Answer the question using hotel knowledge.
-        If unsure, say REQUEST_HUMAN.
-        Question: {message}
-    """)
+    return {
+        **state,
+        "result": {
+            "intent": "INFORMATION_RETRIEVAL",
+            "response": response.content.strip(),
+            "confidence": 0.9,
+            "actions": [],
+        }
+    }
 
-    return GraphOutput(
-        intent="INFORMATION_RETRIEVAL",
-        response=response.content,
-        confidence=0.9,
-        actions=[]
-    ).model_dump()
 
 

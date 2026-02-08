@@ -1,8 +1,8 @@
 # run.py
 from graph import graph
-
+message = input("Enter your message: ")
 result = graph.invoke({
-    "message": "i want to know the laundry system",
+    "message": message,
     "history": []
 })
 

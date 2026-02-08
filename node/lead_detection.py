@@ -6,17 +6,20 @@ def lead_node(state, llm):
         Extract booking intent and contact info if present.
         Respond politely confirming details.
     """)
-    return GraphOutput(
-        intent = "CAPTURE_LEAD",
-        response=response.content,
-        confidence=0.08,
-        actions=[
-            Action(
-                type="CREATE_LEAD",
-                payload={
-                    "intent_type":"BOOKING",
-                    "source":"AI_DETECTED"
+    return {
+        **state,
+        "result": {
+            "intent": "LEAD_CAPTURE",
+            "response": "I can help you with that booking. May I have your details?",
+            "confidence": 0.95,
+            "actions": [
+                {
+                    "type": "CREATE_LEAD",
+                    "payload": {
+                        "date": "FEB_14",
+                        "source": "CHAT"
+                    }
                 }
-            )
-        ]
-    ).model_dump()
+            ]
+        }
+    }
