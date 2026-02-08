@@ -1,5 +1,6 @@
+# node/router.py
 from langchain_core.prompts import ChatPromptTemplate
-from schema import GraphOutput
+from schema import IntentResult
 
 prompt = ChatPromptTemplate.from_messages([
     ("system", """
@@ -11,32 +12,29 @@ Allowed intents ONLY:
 - ISSUE_COMPLAINT
 - HANDOFF_REQUEST
 - CHITCHAT
-
-Return JSON with:
-intent, confidence (0-1)
 """),
     ("human", "{message}")
 ])
 
-def intent_router_node(state, llm):
+INTENT_TO_NODE = {
+    "RAG_QUERY": "rag_node",
+    "LEAD_CAPTURE": "lead_node",
+    "ISSUE_COMPLAINT": "issue_node",
+    "HANDOFF_REQUEST": "handoff_node",
+    "CHITCHAT": "chitchat_node",
+}
+
+def intent_router_node(state: dict, llm):
     message = state["message"]
 
-    result = llm.invoke(
+    structured_llm = llm.with_structured_output(IntentResult)
+    result = structured_llm.invoke(
         prompt.format_messages(message=message)
     )
 
-    parsed = eval(result.content)
-
-    intent = parsed["intent"]
-
     return {
-        "next_node": {
-            "RAG_QUERY": "rag_node",
-            "LEAD_CAPTURE": "lead_node",
-            "ISSUE_COMPLAINT": "issue_node",
-            "HANDOFF_REQUEST": "handoff_node",
-            "CHAT": "chitchat_node"
-        }[intent],
-        "intent": intent,
-        "confidence": parsed["confidence"]
+        **state,
+        "intent": result.intent,
+        "confidence": result.confidence,
+        "next_node": INTENT_TO_NODE[result.intent],
     }

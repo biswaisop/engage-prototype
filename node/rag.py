@@ -10,7 +10,7 @@ def rag_node(state, llm):
     """)
 
     return GraphOutput(
-        intent="INFORMATION_RETRIEVEAL",
+        intent="INFORMATION_RETRIEVAL",
         response=response.content,
         confidence=0.9,
         actions=[]
