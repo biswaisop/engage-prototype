@@ -5,7 +5,7 @@ from chromadb.utils import embedding_functions
 import uuid
 from dotenv import load_dotenv
 import os
-# from model import llm
+
 
 load_dotenv()
 
@@ -23,7 +23,7 @@ class Vector_store_service:
             api_key=self.chroma_api_key,
             database=self.database
         )
-        # self.llm = llm
+        
 
     def get_collection(self):
         try:
@@ -137,5 +137,6 @@ if __name__ == "__main__":
     collection = vector.get_collection()
     results = vector.retrieve_documents("learner autonomy defined according to Holec")
 
-# print(results["documents"][0])
+
+
 print(results)

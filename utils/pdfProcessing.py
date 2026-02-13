@@ -21,10 +21,9 @@ class PDFprocessor:
 
     def __clean_text(self, text:str):
         """clean extracted text"""
-        #Remove excessive white spaces
+
         text = " ".join(text.split())
 
-        #fix common PDF extraction issues
         text = text.replace('fi', 'fi')
         text = text.replace('fl', 'fl')
 
@@ -44,7 +43,7 @@ class PDFprocessor:
             # clean the text
             cleaned_text = self.__clean_text(page.page_content)
 
-            #skip the empty pages
+
             if len(cleaned_text.strip()) < 50:
                 continue
             chunks = self.text_splitter.create_documents(
