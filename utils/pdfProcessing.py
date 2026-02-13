@@ -9,13 +9,13 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 class PDFprocessor:
     """Sdvanced PDF processor"""
-    def __init__(self, chunk_size = 100, chunk_overlap = 100):
+    def __init__(self, chunk_size = 600, chunk_overlap = 80):
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size = chunk_size,
             chunk_overlap = chunk_overlap,
-            separators=[" "],
+            separators=["\n\n", "\n", ".", " ", ""],
             length_function = len
         )
 
