@@ -136,7 +136,4 @@ if __name__ == "__main__":
     vector = Vector_store_service("test-org-1")
     collection = vector.get_collection()
     results = vector.retrieve_documents("learner autonomy defined according to Holec")
-
-
-
-print(results)
+    print(results)

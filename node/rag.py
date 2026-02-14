@@ -1,24 +1,48 @@
-from utils import Vector_store_service
+from utils import Vector_store_service, memory
 from model import llm
 import hashlib
+
+
+RAG_SYSTEM_PROMPT = (
+            """You are a strict policy assistant.
+
+    You MUST answer only using the provided knowledge base context.
+
+    You are NOT a general hotel chatbot.
+    You are NOT allowed to:
+    - Ask follow-up questions
+    - Offer services
+    - Suggest bookings
+    - Add extra details
+    - Use marketing language
+    - Make assumptions
+
+    If the answer is not explicitly present in the knowledge base context,
+    respond EXACTLY with:
+    "I don't have that information. Let me connect you to a human agent."
+
+    Do not soften the refusal.
+    Do not provide partial guesses.
+    Answer concisely.
+"""
+
+)
+
+
 class rag_node:
     def __init__(self):
         self.llm = llm
-
-    def format_history(self, history, max_turns = 4):
-        if not history:
-            return []
-        return history [-max_turns]
+        
 
     def build_context(self, retrieval_results):
-        if not retrieval_results["results"]:
+        """Deduplicate and format retrieved documents."""
+        if not retrieval_results.get("results"):
             return ""
         seen = set()
         context_blocks = []
 
         for r in retrieval_results["results"]:
             content = r["content"].strip()
-
             fingerprint = hashlib.md5(content.encode()).hexdigest()
 
             if fingerprint in seen:
@@ -28,91 +52,121 @@ class rag_node:
             context_blocks.append(content)
 
         return "\n\n".join(context_blocks)
-    
-    def build_messages(self, query, context, history):
-        messages = []
 
-        messages.append({
-            "role": "system",
-            "content": (
-                "You are a helpful assistant for a business. "
-                "Answer ONLY using the provided knowledge base context. "
-                "If the answer is not in the context, say: "
-                "'I don't have that information. Let me connect you to a human agent.' "
-                "Do NOT fabricate information."
-            )
-        })
+    def enhance_query_with_history(self, query: str, state: dict) -> str:
+        """Enhance vague queries using conversation history."""
+        vague_queries = [
+            "tell me more", "more", "continue", "go on", "explain",
+            "what else", "and?", "elaborate", "details", "more details",
+            "what did i ask", "what did you say", "repeat"
+        ]
+        
+        if query.lower().strip() in vague_queries or len(query.split()) <= 3:
+            history = memory.get_history(state, max_turns=2)
+            if history:
+                # Get last user message for context
+                for msg in reversed(history):
+                    if msg.get("role") == "user":
+                        return f"{msg['content']} {query}"
+        return query
 
-        messages.append({
-            "role": "system",
-            "content": f"Knowledge Base Context:\n{context}"
-        })
-
-        messages.extend(history)
-
-        messages.append({
-            "role":"user",
-            "content": query
-        })
-
-        return messages
-
-    def rag_node(self, query:str, state: dict, org_id: str, history):
-        if not query or not query.strip():
+    def rag_node(self, state: dict):
+        """
+        RAG node - retrieves context and generates response.
+        Uses shared memory utility for efficient history management.
+        """
+        print("rag node executed")
+        query = state.get("message", "").strip()
+        org_id = state.get("org_id", "default")
+        
+        if not query:
             return {
-                "status": "failed",
-                "message": "Query cannot be empty."
+                **state,
+                "result": {
+                    "status": "failed",
+                    "response": "Query cannot be empty.",
+                    "confidence": 0.0
+                }
             }
+        
         try:
+            # Enhance query with history for better retrieval
+            enhanced_query = self.enhance_query_with_history(query, state)
+            
+            # Retrieve from vector store using enhanced query
             vector_store = Vector_store_service(org_id)
-            retrieved = vector_store.retrieve_documents(query=query)
-            if retrieved["staus"] != "success":
+            retrieved = vector_store.retrieve_documents(query=enhanced_query)
+            
+            # Get history for LLM context
+            history = memory.get_history(state, max_turns=4)
+            formatted_history = memory.format_for_llm(history)
+            
+            if retrieved.get("status") != "success":
+                response_text = "Knowledge base temporarily unavailable."
                 return {
-                    "status": "error",
-                    "message": "knowledge base temporarily unavailable"
+                    **state,
+                    "messages": memory.add_to_history(state, query, response_text),
+                    "result": {
+                        "status": "error",
+                        "response": response_text,
+                        "confidence": 0.0
+                    }
                 }
-            if retrieved["filtered_count"] == 0:
-                return {
-                    "status": "no_context",
-                    "message": (
-                        "I dont have that information. "
-                        "Let me connect you to a human agent. "
-                    ),
-                    "confidence":"low"
-                }
-            context = self.build_context(retrieval_results=retrieved)
-            formatted_history = self.format_history(history)
-            messages = self.build_messages(
-                query=query,
-                context=context,
-                history = formatted_history
-            )
-            response = self.llm.invoke(messages)
-
-            if hasattr(response, "content"):
-                answer = response.content
-            else:
-                answer = str(response)
-            return {
-                "status": "success",
-                "answer": answer,
-                "confidence": (
-                    "high" if retrieved["filtered_count"] >= 2 else "medium"
-                )
-            }
-        except Exception as e: 
-            return {
-                "status": "error",
-                "message": (
-                    "I'm experiencing technical difficulty. "
+            
+            # Even with no docs, if we have history, let LLM try to help
+            context = self.build_context(retrieved)
+            
+            if retrieved.get("filtered_count", 0) == 0 and not history:
+                response_text = (
+                    "I don't have that information. "
                     "Let me connect you to a human agent."
-                ),
-                "error": str(e)
+                )
+                return {
+                    **state,
+                    "messages": memory.add_to_history(state, query, response_text),
+                    "result": {
+                        "status": "no_context",
+                        "response": response_text,
+                        "confidence": 0.3
+                    }
+                }
+            
+            # Build messages using shared utility
+            messages = memory.build_messages(
+                query=query,
+                system_prompt=RAG_SYSTEM_PROMPT,
+                history=formatted_history,
+                context=context if context else "No additional context available."
+            )
+            
+            # Generate response
+            response = self.llm.invoke(messages)
+            answer = response.content if hasattr(response, "content") else str(response)
+            
+            # Return updated state with new history
+            return {
+                **state,
+                "messages": memory.add_to_history(state, query, answer),
+                "result": {
+                    "status": "success",
+                    "response": answer,
+                    "confidence": 0.9 if retrieved.get("filtered_count", 0) >= 2 else 0.7,
+                    "intent": "INFORMATION_RETRIEVAL"
+                }
             }
             
-
-    
-
-
-
-
+        except Exception as e:
+            response_text = (
+                "I'm experiencing technical difficulty. "
+                "Let me connect you to a human agent."
+            )
+            return {
+                **state,
+                "messages": memory.add_to_history(state, query, response_text),
+                "result": {
+                    "status": "error",
+                    "response": response_text,
+                    "error": str(e),
+                    "confidence": 0.0
+                }
+            }

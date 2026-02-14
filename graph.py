@@ -1,5 +1,6 @@
 # graph.py
 from langgraph.graph import StateGraph, END
+from langgraph.checkpoint.memory import MemorySaver
 from model import llm
 from schema import GraphState
 from node import intent_router_node
@@ -8,6 +9,10 @@ from node import lead_node
 from node import issue_node
 from node import handoff_node
 from node import chat_node
+
+# In-memory checkpointer for conversation persistence
+# For production, swap to SqliteSaver or PostgresSaver
+checkpointer = MemorySaver()
 
 builder = StateGraph(GraphState)
 
@@ -40,4 +45,5 @@ builder.add_edge("issue_node", END)
 builder.add_edge("handoff_node", END)
 builder.add_edge("chat_node", END)
 
-graph = builder.compile()
+# Compile with checkpointer for automatic memory persistence
+graph = builder.compile(checkpointer=checkpointer)

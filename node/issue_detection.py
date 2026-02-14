@@ -1,18 +1,37 @@
 # node/issue_detection.py
+from utils import memory
+
+ISSUE_SYSTEM_PROMPT = (
+    "You are a hotel support specialist handling guest complaints. "
+    "Be empathetic, apologize sincerely, and assure prompt resolution. "
+    "Let them know a human team member will assist immediately."
+)
+
 
 def issue_node(state: dict, llm):
-    message = state["message"]
-
-    response_text = (
-        "I’m really sorry you’re facing this issue. "
-        "I’m alerting a human team member right now to assist you."
+    """Handle issues/complaints with conversation memory."""
+    query = state.get("message", "")
+    
+    # Get history using shared memory utility
+    history = memory.get_history(state, max_turns=4)
+    formatted_history = memory.format_for_llm(history)
+    
+    # Build messages using shared utility
+    messages = memory.build_messages(
+        query=query,
+        system_prompt=ISSUE_SYSTEM_PROMPT,
+        history=formatted_history
     )
+    
+    response = llm.invoke(messages)
+    answer = response.content if hasattr(response, "content") else str(response)
 
     return {
         **state,
+        "messages": memory.add_to_history(state, query, answer),
         "result": {
-            "intent": "ESCALATE_ISSUE",
-            "response": response_text,
+            "intent": "ISSUE_COMPLAINT",
+            "response": answer,
             "confidence": 1.0,
             "actions": [
                 {
