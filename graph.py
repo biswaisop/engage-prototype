@@ -9,10 +9,11 @@ from node import lead_node
 from node import issue_node
 from node import handoff_node
 from node import chat_node
-
+from utils import PostgresCheckpointer
 # In-memory checkpointer for conversation persistence
 # For production, swap to SqliteSaver or PostgresSaver
-checkpointer = MemorySaver()
+# checkpointer = MemorySaver()
+checkpointer = PostgresCheckpointer()
 
 builder = StateGraph(GraphState)
 

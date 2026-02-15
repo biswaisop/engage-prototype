@@ -24,3 +24,4 @@ class GraphState(TypedDict, total=False):
     confidence: Optional[float]           # Intent confidence
     next_node: Optional[str]              # Next node to route to
     result: Optional[Dict[str, Any]]      # Node output
+    conversation_id: Optional[str]

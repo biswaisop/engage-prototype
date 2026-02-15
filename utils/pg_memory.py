@@ -41,3 +41,104 @@ class PostgresMemory:
                 visitor_id = uuid.UUID(visitor_id)if visitor_id else uuid.uuid4(),
                 state = "AI_ACTIVE"
             )
+            db.add(conversation)
+            db.flush()
+        return conversation
+
+    def get_history(
+            self,
+            db:Session,
+            conversation_id: uuid.UUID,
+            max_turns: int = 6,
+    ) -> List[Dict[str, str]]:
+        """ Get conversation history from PostgreSQL.
+        Returns last `max_turns` exchanges."""
+
+        messages = db.query(Message).filter(
+            Message.conversation_id == conversation_id,
+        ).order_by(
+            desc(Message.created_at)
+        ).limit(max_turns*2).all()
+
+        messages = list(reversed(messages))
+
+        history = []
+
+        for msg in messages:
+            role = "assistant" if msg.sender_type in ["AI", "AGENT"] else "user"
+            history.append({
+                "role": role,
+                "content": msg.content
+            })
+        return history
+    
+    def add_messages(
+            self,
+            db: Session,
+            conversation_id: uuid.UUID,
+            content: str,
+            sender_type: str,
+            sender_id: uuid.UUID = None,
+            message_metadata: Dict = None
+    ) -> Message:
+        """Add a message to the conversation"""
+        message = Message(
+            conversation_id = conversation_id,
+            sender_type = sender_type,
+            sender_id = sender_id,
+            content = content,
+            message_metadata = message_metadata or {}
+        )
+        db.add(message)
+        db.flush()
+        return message
+    
+    def add_exchange(
+            self,
+            db: Session,
+            conversation_id: uuid.UUID,
+            user_message: str,
+            assistant_response: str,
+            assistant_type: str = "AI"
+    ) -> tuple:
+        """Add a user message and response."""
+        user_msg = self.add_messages(db, conversation_id, user_message, "VISITOR")
+        assistant_msg = self.add_messages(db, conversation_id, assistant_response, assistant_type)
+        return user_msg, assistant_msg
+    
+    @staticmethod
+    def format_for_llm(history: List[Dict[str, str]]) -> list[Dict[str, str]]:
+        """Format history for llm use"""
+        return history
+    
+    @staticmethod
+    def build_messages(
+        query: str,
+        system_prompt: str,
+        history: List[Dict[str, str]] = None,
+        context: str = None,
+    ) -> List[Dict[str, str]]:
+        """Build complete messages for LLM invocation."""
+        messages = []
+
+        # Add system prompt
+        messages.append({"role": "system", "content": system_prompt})
+
+        # Add context if provided
+        if context:
+            messages.append({
+                "role": "system",
+                "content": f"Knowledge Base Context:\n{context}"
+            })
+
+        # Add conversation history
+        if history:
+            messages.extend(history)
+
+        # Add current user query
+        messages.append({"role": "user", "content": query})
+
+        return messages
+
+
+pg_memory = PostgresMemory()

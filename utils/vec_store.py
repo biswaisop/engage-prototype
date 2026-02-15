@@ -5,13 +5,13 @@ from chromadb.utils import embedding_functions
 import uuid
 from dotenv import load_dotenv
 import os
-
+import uuid as uuid_lib
 
 load_dotenv()
 
 class Vector_store_service:
     def __init__(self, org_id):
-        self.collection = org_id
+        self.collection = self._uuid_to_collection_name(org_id)
         self.chroma_api_key = os.getenv("CHROMADB_API_KEY")
         self.chroma_tenant = os.getenv("CHROMADB_TENANT")
         self.database = os.getenv("VECTOR_DB")
@@ -24,6 +24,24 @@ class Vector_store_service:
             database=self.database
         )
         
+    def _uuid_to_collection_name(self, org_id: str) -> str:
+        """
+        Convert UUID to a valid collection name.
+        ChromaDB collection names must:
+        - Be 3-63 characters
+        - Start and end with alphanumeric
+        - Contain only alphanumeric, underscores, hyphens
+        """
+        # Validate it's a proper UUID
+        try:
+            uuid_obj = uuid_lib.UUID(org_id)
+            # Use hex (no hyphens) with prefix
+            return f"kb_{uuid_obj.hex}"
+        except ValueError:
+            # If not a valid UUID, sanitize the string
+            safe_name = org_id.replace("-", "_").replace(" ", "_")
+            return f"kb_{safe_name}"
+
 
     def get_collection(self):
         try:

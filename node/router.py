@@ -1,8 +1,10 @@
 # node/router.py
 
 from schema import IntentResult
-
-
+import uuid
+from db import get_db
+from utils import pg_memory
+from db import Conversation
 FINAL_INTENTS = {
     "INFORMATION_RETRIEVAL",
     "LEAD_CAPTURE",
@@ -72,7 +74,15 @@ QUESTION_STARTERS = (
 
 def intent_router_node(state: dict, llm=None):
     message = state["message"].strip().lower()
+    org_id = state.get("org_id", str(uuid.uuid4()))
+    thread_id = state.get("thread_id", str(uuid.uuid4()))
 
+    with get_db() as db:
+        conversation = pg_memory.get_or_create_conversation(
+            db, thread_id, org_id
+        )
+        conversation_id = str(conversation.id)
+    
     # 🚨 1️⃣ Emergency → ISSUE_COMPLAINT
     if any(word in message for word in EMERGENCY_KEYWORDS):
         return {
@@ -130,4 +140,5 @@ def intent_router_node(state: dict, llm=None):
         **state,
         "intent": "INFORMATION_RETRIEVAL",
         "confidence": 0.7,
+        "conversation_id": conversation_id
     }
