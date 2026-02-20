@@ -10,3 +10,14 @@ llm = ChatGroq(
     model_name="llama-3.3-70b-versatile",
     temperature=0.7
 )
+
+# gemini = os.getenv("GEMINI_API_KEY")
+
+# llm = ChatGoogleGenerativeAI(
+#     model="gemini-2.5-flash",
+#     google_api_key = gemini,
+#     temperature = 0
+# )
+
+if __name__ == "__main__":
+    llm.invoke("hi")

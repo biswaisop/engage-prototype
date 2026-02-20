@@ -82,7 +82,7 @@ class Vector_store_service:
             }
 
 
-    def retrieve_documents(self, query:str, k:int = 5, thresold:float = 0.5):
+    def retrieve_documents(self, query:str, k:int = 5, thresold:float = 0.7):
         
         if not query or not query.strip():
             raise ValueError("Query cannot be empty")

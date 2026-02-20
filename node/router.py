@@ -1,7 +1,144 @@
+# # node/router.py
+
+# from schema import IntentResult
+
+
+# FINAL_INTENTS = {
+#     "INFORMATION_RETRIEVAL",
+#     "LEAD_CAPTURE",
+#     "ISSUE_COMPLAINT",
+#     "HANDOFF_REQUEST",
+#     "CHAT",
+# }
+
+
+# # ---------------------------
+# # KEYWORD GROUPS
+# # ---------------------------
+
+# EMERGENCY_KEYWORDS = [
+#     "fire", "smoke", "gas", "bleeding",
+#     "emergency", "danger", "help"
+# ]
+
+# ISSUE_KEYWORDS = [
+#     "complaint", "problem", "issue",
+#     "charged", "refund", "not working",
+#     "broken", "damaged", "leaking",
+#     "dirty", "unclean", "filthy",
+#     "condoms", "trash", "garbage",
+#     "bad smell"
+# ]
+
+# BOOKING_ACTION_KEYWORDS = [
+#     "book",
+#     "booking",
+#     "reserve",
+#     "reservation",
+#     "cancel my booking",
+#     "modify my booking",
+#     "change my booking",
+#     "check availability",
+#     "availability",
+# ]
+
+# HANDOFF_KEYWORDS = [
+#     "human",
+#     "manager",
+#     "agent",
+#     "representative",
+#     "real person"
+# ]
+
+# GREETING_KEYWORDS = [
+#     "hi",
+#     "hello",
+#     "hey",
+#     "good morning",
+#     "good evening",
+# ]
+
+
+# QUESTION_STARTERS = (
+#     "what", "when", "how", "where",
+#     "who", "can", "do", "is", "are",
+#     "does", "did"
+# )
+
+
+# # ---------------------------
+# # ROUTER NODE
+# # ---------------------------
+
+# def intent_router_node(state: dict, llm=None):
+#     message = state["message"].strip().lower()
+
+#     # 🚨 1️⃣ Emergency → ISSUE_COMPLAINT
+#     if any(word in message for word in EMERGENCY_KEYWORDS):
+#         return {
+#             **state,
+#             "intent": "ISSUE_COMPLAINT",
+#             "confidence": 1.0,
+#         }
+
+#     # 🧯 2️⃣ Explicit complaint keywords → ISSUE_COMPLAINT
+#     if any(word in message for word in ISSUE_KEYWORDS):
+#         return {
+#             **state,
+#             "intent": "ISSUE_COMPLAINT",
+#             "confidence": 0.95,
+#         }
+
+#     # 🧑‍💼 3️⃣ Explicit request for human
+#     if any(word in message for word in HANDOFF_KEYWORDS):
+#         return {
+#             **state,
+#             "intent": "HANDOFF_REQUEST",
+#             "confidence": 0.95,
+#         }
+
+#     # 💰 4️⃣ Booking / Transactional Action
+#     # Important: must be action-oriented, not policy questions
+#     if any(word in message for word in BOOKING_ACTION_KEYWORDS):
+#         # If it is a direct action (not a question about policy)
+#         if not message.startswith(QUESTION_STARTERS) and "?" not in message:
+#             return {
+#                 **state,
+#                 "intent": "LEAD_CAPTURE",
+#                 "confidence": 0.95,
+#             }
+
+#     # ❓ 5️⃣ If it looks like a question → INFORMATION_RETRIEVAL
+#     if message.startswith(QUESTION_STARTERS) or "?" in message:
+#         return {
+#             **state,
+#             "intent": "INFORMATION_RETRIEVAL",
+#             "confidence": 0.95,
+#         }
+
+#     # 👋 6️⃣ Greeting
+#     if any(message.startswith(word) for word in GREETING_KEYWORDS):
+#         return {
+#             **state,
+#             "intent": "CHAT",
+#             "confidence": 0.9,
+#         }
+
+#     # 🧠 7️⃣ Default → INFORMATION_RETRIEVAL
+#     # Safer than defaulting to LEAD_CAPTURE
+#     return {
+#         **state,
+#         "intent": "INFORMATION_RETRIEVAL",
+#         "confidence": 0.7,
+#     }
+
 # node/router.py
 
+from typing import Optional
+from model import llm
 from schema import IntentResult
-
+import json
+import re
 
 FINAL_INTENTS = {
     "INFORMATION_RETRIEVAL",
@@ -11,123 +148,227 @@ FINAL_INTENTS = {
     "CHAT",
 }
 
-
 # ---------------------------
-# KEYWORD GROUPS
-# ---------------------------
-
-EMERGENCY_KEYWORDS = [
-    "fire", "smoke", "gas", "bleeding",
-    "emergency", "danger", "help"
-]
-
-ISSUE_KEYWORDS = [
-    "complaint", "problem", "issue",
-    "charged", "refund", "not working",
-    "broken", "damaged", "leaking",
-    "dirty", "unclean", "filthy",
-    "condoms", "trash", "garbage",
-    "bad smell"
-]
-
-BOOKING_ACTION_KEYWORDS = [
-    "book",
-    "booking",
-    "reserve",
-    "reservation",
-    "cancel my booking",
-    "modify my booking",
-    "change my booking",
-    "check availability",
-    "availability",
-]
-
-HANDOFF_KEYWORDS = [
-    "human",
-    "manager",
-    "agent",
-    "representative",
-    "real person"
-]
-
-GREETING_KEYWORDS = [
-    "hi",
-    "hello",
-    "hey",
-    "good morning",
-    "good evening",
-]
-
-
-QUESTION_STARTERS = (
-    "what", "when", "how", "where",
-    "who", "can", "do", "is", "are",
-    "does", "did"
-)
-
-
-# ---------------------------
-# ROUTER NODE
+# SYSTEM PROMPT FOR CLASSIFICATION
 # ---------------------------
 
-def intent_router_node(state: dict, llm=None):
-    message = state["message"].strip().lower()
+INTENT_CLASSIFICATION_PROMPT = """You are an intent classification system for a hotel front desk AI assistant.
 
-    # 🚨 1️⃣ Emergency → ISSUE_COMPLAINT
-    if any(word in message for word in EMERGENCY_KEYWORDS):
-        return {
-            **state,
-            "intent": "ISSUE_COMPLAINT",
-            "confidence": 1.0,
-        }
+Your job is to classify user messages into exactly ONE of these intents:
 
-    # 🧯 2️⃣ Explicit complaint keywords → ISSUE_COMPLAINT
-    if any(word in message for word in ISSUE_KEYWORDS):
-        return {
-            **state,
-            "intent": "ISSUE_COMPLAINT",
-            "confidence": 0.95,
-        }
+## INTENTS:
 
-    # 🧑‍💼 3️⃣ Explicit request for human
-    if any(word in message for word in HANDOFF_KEYWORDS):
-        return {
-            **state,
-            "intent": "HANDOFF_REQUEST",
-            "confidence": 0.95,
-        }
+1. **INFORMATION_RETRIEVAL** - User wants factual information about:
+   - Hotel policies (check-in/out, smoking, pets, cancellation)
+   - Amenities (pool, gym, spa, WiFi, parking)
+   - Room details (types, features, capacity)
+   - Location, directions, nearby attractions
+   - Pricing or rates (without booking intent)
+   - Follow-up questions like "tell me more", "explain", "what else"
 
-    # 💰 4️⃣ Booking / Transactional Action
-    # Important: must be action-oriented, not policy questions
-    if any(word in message for word in BOOKING_ACTION_KEYWORDS):
-        # If it is a direct action (not a question about policy)
-        if not message.startswith(QUESTION_STARTERS) and "?" not in message:
+2. **LEAD_CAPTURE** - User shows intent to:
+   - Book a room or make a reservation
+   - Check availability for specific dates
+   - Modify or cancel an existing booking
+   - Request a quote or pricing for booking
+   - Provide contact details for booking follow-up
+
+3. **ISSUE_COMPLAINT** - User reports:
+   - Problems with room (dirty, broken, not working)
+   - Service complaints
+   - Billing disputes or wrong charges
+   - Safety concerns or emergencies
+   - Negative experiences
+
+4. **HANDOFF_REQUEST** - User explicitly wants:
+   - To speak with a human
+   - Manager or supervisor
+   - Real person instead of AI
+   - Transfer to staff
+
+5. **CHAT** - Casual conversation:
+   - Greetings (hi, hello, good morning)
+   - Small talk
+   - Introductions (I am..., my name is...)
+   - Thanks, goodbye
+   - Unclear or off-topic messages
+   - Single words like "ok", "sure", "clear", "yes", "no"
+
+## RULES:
+- Choose the MOST LIKELY intent based on the message
+- If ambiguous between INFORMATION_RETRIEVAL and CHAT, prefer CHAT for very short/vague messages
+- "tell me more" or "explain" after a policy question = INFORMATION_RETRIEVAL
+- Booking-related questions WITHOUT action intent = INFORMATION_RETRIEVAL
+- "I want to book" or "reserve a room" = LEAD_CAPTURE
+- Single greetings or names = CHAT
+- When in doubt with short unclear messages = CHAT
+
+## OUTPUT FORMAT:
+Respond with ONLY a JSON object, no other text:
+{"intent": "INTENT_NAME", "confidence": 0.XX, "reasoning": "brief explanation"}"""
+
+
+# ---------------------------
+# FAST KEYWORD FALLBACK
+# ---------------------------
+
+EMERGENCY_KEYWORDS = ["fire", "smoke", "gas", "bleeding", "emergency", "danger"]
+HANDOFF_KEYWORDS = ["human", "manager", "agent", "representative", "real person", "speak to someone"]
+GREETING_PATTERNS = ["^hi$", "^hello$", "^hey$", "^good morning", "^good evening", "^good afternoon"]
+CHAT_PATTERNS = ["^ok$", "^okay$", "^sure$", "^yes$", "^no$", "^thanks", "^thank you", "^bye", "^clear$", "^i am ", "^my name is "]
+
+
+def fast_keyword_check(message: str) -> Optional[dict]:
+    """
+    Fast path for obvious intents - saves LLM calls.
+    Returns None if LLM classification needed.
+    """
+    msg = message.strip().lower()
+    
+    # Emergency - always fast path
+    if any(word in msg for word in EMERGENCY_KEYWORDS):
+        return {"intent": "ISSUE_COMPLAINT", "confidence": 1.0}
+    
+    # Explicit handoff request
+    if any(word in msg for word in HANDOFF_KEYWORDS):
+        return {"intent": "HANDOFF_REQUEST", "confidence": 0.98}
+    
+    # Simple greetings
+    for pattern in GREETING_PATTERNS:
+        if re.match(pattern, msg):
+            return {"intent": "CHAT", "confidence": 0.95}
+    
+    # Simple chat patterns
+    for pattern in CHAT_PATTERNS:
+        if re.match(pattern, msg):
+            return {"intent": "CHAT", "confidence": 0.90}
+    
+    return None  # Needs LLM classification
+
+
+# ---------------------------
+# LLM CLASSIFICATION
+# ---------------------------
+
+def classify_with_llm(message: str, history: list = None) -> dict:
+    """
+    Use LLM to classify intent with conversation context.
+    """
+    # Build context from history if available
+    context_str = ""
+    if history and len(history) > 0:
+        recent = history[-4:]  # Last 2 exchanges
+        context_parts = []
+        for msg in recent:
+            role = msg.get("role", "user")
+            content = msg.get("content", "")[:150]  # Truncate for efficiency
+            context_parts.append(f"{role.upper()}: {content}")
+        context_str = f"\n\nRecent conversation:\n" + "\n".join(context_parts)
+    
+    user_prompt = f"""Classify this message:{context_str}
+
+Current message: "{message}"
+
+Respond with JSON only."""
+
+    messages = [
+        {"role": "system", "content": INTENT_CLASSIFICATION_PROMPT},
+        {"role": "user", "content": user_prompt}
+    ]
+    
+    try:
+        response = llm.invoke(messages)
+        content = response.content if hasattr(response, "content") else str(response)
+        
+        # Parse JSON from response
+        json_match = re.search(r'\{[^}]+\}', content)
+        if json_match:
+            result = json.loads(json_match.group())
+            intent = result.get("intent", "CHAT").upper()
+            
+            # Validate intent
+            if intent not in FINAL_INTENTS:
+                intent = "CHAT"
+            
             return {
-                **state,
-                "intent": "LEAD_CAPTURE",
-                "confidence": 0.95,
+                "intent": intent,
+                "confidence": float(result.get("confidence", 0.8)),
+                "reasoning": result.get("reasoning", "")
             }
+    except Exception as e:
+        print(f"LLM classification error: {e}")
+    
+    # Fallback
+    return {"intent": "CHAT", "confidence": 0.5, "reasoning": "fallback"}
 
-    # ❓ 5️⃣ If it looks like a question → INFORMATION_RETRIEVAL
-    if message.startswith(QUESTION_STARTERS) or "?" in message:
-        return {
-            **state,
-            "intent": "INFORMATION_RETRIEVAL",
-            "confidence": 0.95,
-        }
 
-    # 👋 6️⃣ Greeting
-    if any(message.startswith(word) for word in GREETING_KEYWORDS):
+# ---------------------------
+# MAIN ROUTER NODE
+# ---------------------------
+
+def intent_router_node(state: dict, llm_instance=None):
+    """
+    Hybrid intent router:
+    1. Fast keyword check for obvious cases
+    2. LLM classification for nuanced cases
+    """
+    message = state.get("message", "").strip()
+    history = state.get("messages", [])
+    
+    if not message:
         return {
             **state,
             "intent": "CHAT",
-            "confidence": 0.9,
+            "confidence": 0.0,
         }
-
-    # 🧠 7️⃣ Default → INFORMATION_RETRIEVAL
-    # Safer than defaulting to LEAD_CAPTURE
+    
+    # 1️⃣ Try fast keyword matching first
+    fast_result = fast_keyword_check(message)
+    if fast_result:
+        print(f"[Router] Fast match: {fast_result['intent']}")
+        return {
+            **state,
+            "intent": fast_result["intent"],
+            "confidence": fast_result["confidence"],
+        }
+    
+    # 2️⃣ Use LLM for complex classification
+    llm_result = classify_with_llm(message, history)
+    print(f"[Router] LLM classification: {llm_result['intent']} ({llm_result.get('reasoning', '')})")
+    
     return {
         **state,
-        "intent": "INFORMATION_RETRIEVAL",
-        "confidence": 0.7,
+        "intent": llm_result["intent"],
+        "confidence": llm_result["confidence"],
     }
+
+
+# ---------------------------
+# BATCH CLASSIFICATION (OPTIONAL)
+# ---------------------------
+
+def classify_batch(messages: list[str]) -> list[dict]:
+    """
+    Classify multiple messages in one LLM call.
+    Useful for testing or bulk processing.
+    """
+    batch_prompt = f"""{INTENT_CLASSIFICATION_PROMPT}
+
+Classify each message and return a JSON array:
+[{{"message": "...", "intent": "...", "confidence": 0.XX}}]
+
+Messages to classify:
+{json.dumps(messages, indent=2)}"""
+
+    try:
+        response = llm.invoke([{"role": "user", "content": batch_prompt}])
+        content = response.content if hasattr(response, "content") else str(response)
+        
+        # Extract JSON array
+        json_match = re.search(r'\[.*\]', content, re.DOTALL)
+        if json_match:
+            return json.loads(json_match.group())
+    except Exception as e:
+        print(f"Batch classification error: {e}")
+    
+    return [{"intent": "CHAT", "confidence": 0.5} for _ in messages]
