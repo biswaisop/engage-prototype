@@ -1,38 +1,28 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-from contextlib import contextmanager
-from dotenv import load_dotenv
+from pymongo import MongoClient
+from pymongo.collection import Collection
 import os
-from typing import Generator
+from dotenv import load_dotenv
+
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-engine = create_engine(
-    DATABASE_URL,
-    pool_size=10,
-    max_overflow=20,
-    pool_pre_ping=True,
-    pool_recycle=3600
-)
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-@contextmanager
-def get_db() -> Generator[Session, None, None]:
-    """Database session context manager."""
-    db = SessionLocal()
+class MongoDB:
+    _client: MongoClient = None
 
-    try:
-        yield db
-        db.commit()
-    except Exception:
-        db.rollback()
-        raise
-    finally:
-        db.close()
+    @classmethod
+    def get_client(cls) -> MongoClient:
+        if cls._client is None:
+            cls._client = MongoClient(os.getenv("MONGODB"))
+        return cls._client
 
-def get_db_session() -> Session:
-    """Get a database session (for dependency injection)."""
-    return SessionLocal()
+    @classmethod
+    def get_collection(cls, collection_name: str) -> Collection:
+        client = cls.get_client()
+        db = client[os.getenv("MONGODB-NAME", "hotel-chatbot")]
+        return db[collection_name]
+    
+    @classmethod
+    def conversations(cls) -> Collection:
+        return cls.get_collection("chats")
+    

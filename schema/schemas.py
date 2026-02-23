@@ -18,9 +18,11 @@ class IntentResult(BaseModel):
 class GraphState(TypedDict, total=False):
     """State shared across all graph nodes."""
     message: str                          # Current user input
-    messages: List[Dict[str, str]]        # Conversation history (auto-managed by checkpointer)
+    messages: List[Dict[str, str]]  
+    thread_id: str      # Conversation history (auto-managed by checkpointer)
     org_id: str                           # Organization ID for multi-tenant
     intent: Optional[str]                 # Detected intent
     confidence: Optional[float]           # Intent confidence
     next_node: Optional[str]              # Next node to route to
+    context: Optional[str]
     result: Optional[Dict[str, Any]]      # Node output

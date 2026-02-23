@@ -1,97 +1,32 @@
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey, JSON, Enum, Integer
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-from datetime import datetime
-import uuid
-import enum
-import time
-Base = declarative_base()
+from pydantic import BaseModel, Field
+from typing import List, Optional, Dict, Any
+from datetime import datetime, timezone
+from enum import Enum
 
-class ConversationState(str, enum.Enum):
-    AI_ACTIVE = "AI_ACTIVE"
-    HUMAN_REQUESTED = "HUMAN_REQUESTED"
-    HUMAN_CONNECTED = "HUMAN_CONNECTED"
-    CLOSED = "CLOSED"
+class MessageRole(str, Enum):
+    USER = "user"
+    ASSISTANT = "assistant"
+    SYSTEM = "system"
 
-class SenderType(str, enum.Enum):
-    VISITOR = "VISITOR"
-    AI = "AI"
-    AGENT = "AGENT"
-    SYSTEM = "SYSTEM"
+class Message(BaseModel):
+    role: MessageRole
+    content: str
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    metadata: Dict[str, Any] = Field(default_factory=dict)
 
-class Organization(Base):
-    __tablename__ = "organizations"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(String(255), nullable=False)
-    slug = Column(String(100), unique=True, nullable=False)
-    config = Column(JSON, default={})
-    plan = Column(String(50), default="FREE")
-    status = Column(String(50), default="ACTIVE")
-    created_at = Column(DateTime, default=time.time)
-
-    conversations = relationship("Conversation", back_populates="organization")
-
-class Conversation(Base):
-    __tablename__ = "conversations"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
-    visitor_id = Column(UUID(as_uuid=True), nullable=False)
-    visitor_name = Column(String(255))
-    visitor_metadata = Column(JSON, default = {})
-    state = Column(String(50), default=ConversationState.AI_ACTIVE.value)
-    agent_id = Column(UUID(as_uuid=True), nullable = True)
-    handoff_reason = Column(Text)
-    created_at = Column(DateTime, default=time.time)
-    updated_at = Column(DateTime, default=time.time)
-    connected_at = Column(DateTime, nullable=True)
-    closed_at = Column(DateTime, nullable=True)
-
-    organization = relationship("Organization", back_populates = "conversations")
-    messages = relationship("Message", back_populates="conversation", order_by="Message.created_at")
+class Conversation(BaseModel):
+    thread_id: str
+    org_id: str
+    user_id: Optional[str] = None
+    messages: List[Message] = Field(default_factory=list)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    metadata: Dict[str, Any] = Field(default_factory=dict)
 
 
-class Message(Base):
-    __tablename__ = "messages"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    conversation_id = Column(UUID(as_uuid=True), ForeignKey("conversations.id"), nullable=False)
-    sender_type = Column(String(50), nullable=False)
-    sender_id = Column(UUID(as_uuid=True), nullable=True)
-    content = Column(Text, nullable=False)
-    message_metadata = Column(JSON, default={})
-    client_message_id = Column(String(200), nullable=True)
-    created_at = Column(DateTime, default=time.time)
-
-    conversation = relationship("Conversation", back_populates="messages")
-
-class Lead(Base):
-    __tablename__ = "leads"
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
-    conversation_id = Column(UUID(as_uuid=True), ForeignKey("conversations.id"), nullable=False)
-    contact_info = Column(JSON, nullable=False)
-    intent_type = Column(String(50), nullable=False)
-    intent_details = Column(JSON, default={})
-    source = Column(String(50), nullable=False)
-    status = Column(String(50), default="new")
-    notes = Column(Text)
-    created_at = Column(DateTime, default=time.time)
-
-class Issue(Base):
-    __tablename__ = "issues"
-    
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
-    conversation_id = Column(UUID(as_uuid=True), ForeignKey("conversations.id"), nullable=False)
-    category = Column(String(50), nullable=False)
-    description = Column(Text, nullable=False)
-    severity = Column(String(50), nullable=False)
-    issue_metadata = Column(JSON, default={})
-    source = Column(String(50), nullable=False)
-    status = Column(String(50), default="OPEN")
-    external_ticket_id = Column(String(255), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+class ChatRequest(BaseModel):
+    thread_id: str
+    org_id: str
+    message: str
+    user_id: Optional[str] = None
 
