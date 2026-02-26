@@ -26,3 +26,14 @@ class GraphState(TypedDict, total=False):
     next_node: Optional[str]              # Next node to route to
     context: Optional[str]
     result: Optional[Dict[str, Any]]      # Node output
+
+
+class chatMessageRequest(BaseModel):
+    thread_id: str
+    message: str
+    org_id: str
+
+class chatMessageResponse(BaseModel):
+    response: str
+    thread_id: str
+    org_id: str

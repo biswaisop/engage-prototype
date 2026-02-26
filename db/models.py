@@ -30,3 +30,4 @@ class ChatRequest(BaseModel):
     message: str
     user_id: Optional[str] = None
 
+
