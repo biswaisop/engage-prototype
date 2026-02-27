@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import List, Optional, Dict, Any, TypedDict
 
 class Action (BaseModel):
@@ -37,3 +37,23 @@ class chatMessageResponse(BaseModel):
     response: str
     thread_id: str
     org_id: str
+
+class chatHistoryResponse(BaseModel):
+    thread_id: str
+    message: List[Any]
+
+class leadForm(BaseModel):
+    thread_id: str
+    org_id: str
+    email: EmailStr
+    phone: Optional[str]
+    check_in: str
+    check_out: str
+    room_type: Optional[str]
+    guest_count: Optional[str]
+    notes: Optional[str]
+
+class leadResponse(BaseModel):
+    thread_id: str
+    message: str
+    timestamp: str

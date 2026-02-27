@@ -8,7 +8,7 @@ groq = os.getenv('GROQ_LLM_KEY')
 
 llm = ChatGroq(
     model_name="llama-3.3-70b-versatile",
-    temperature=0.7
+    temperature=0.0
 )
 
 # gemini = os.getenv("GEMINI_API_KEY")

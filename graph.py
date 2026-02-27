@@ -10,6 +10,7 @@ from node import issue_node
 from node import handoff_node
 from node import chat_node
 from langgraph.checkpoint.memory import InMemorySaver
+from redis.exceptions import ConnectionError as RedisConnectionError
 checkpointer = InMemorySaver()
 
 # Initialize Redis memory (module-level singleton)
@@ -19,38 +20,50 @@ def load_context(state: GraphState) -> GraphState:
     """Load conversation context from Redis"""
     thread_id = state.get("thread_id", "")
     print(f"[load_context] thread_id: {thread_id}")  # Debug
+    try:
+        if thread_id:
+            context = redis_memory.get_context_string(thread_id, limit=10)
+            state["context"] = context
+            print(f"[load_context] loaded context: {context[:100] if context else 'empty'}")  # Debug
+    except RedisConnectionError as e:
+        print(f"[load_context] Redis connection error: {e}")
+        state["context"] = None
     
-    if thread_id:
-        context = redis_memory.get_context_string(thread_id, limit=10)
-        state["context"] = context
-        print(f"[load_context] loaded context: {context[:100] if context else 'empty'}")  # Debug
+    except Exception as e:
+        print(f"[load_context] Redis error: {e}")
+        state["context"] = None
+    
     return state
 
 def save_to_redis(state: GraphState) -> GraphState:
     """Save interaction to Redis"""
     thread_id = state.get("thread_id", "")
     print(f"[save_to_redis] thread_id: {thread_id}")  # Debug
-    
-    if not thread_id:
-        print("[save_to_redis] No thread_id, skipping save")  # Debug
-        return state
-    
-    message = state.get("message", "")
-    response = state.get("result", {}).get("response", "")
-    intent = state.get("intent", "")
-    
-    print(f"[save_to_redis] message: {message[:50] if message else 'empty'}")  # Debug
-    print(f"[save_to_redis] response: {response[:50] if response else 'empty'}")  # Debug
-    
-    # Save user message
-    if message:
-        redis_memory.add_message(thread_id, "user", message)
-        print(f"[save_to_redis] Saved user message")  # Debug
-    
-    # Save assistant response
-    if response:
-        redis_memory.add_message(thread_id, "assistant", response, {"intent": intent})
-        print(f"[save_to_redis] Saved assistant response")  # Debug
+    try:
+        if not thread_id:
+            print("[save_to_redis] No thread_id, skipping save")  # Debug
+            return state
+        
+        message = state.get("message", "")
+        response = state.get("result", {}).get("response", "")
+        intent = state.get("intent", "")
+        
+        print(f"[save_to_redis] message: {message[:50] if message else 'empty'}")  # Debug
+        print(f"[save_to_redis] response: {response[:50] if response else 'empty'}")  # Debug
+        
+        # Save user message
+        if message:
+            redis_memory.add_message(thread_id, "user", message)
+            print(f"[save_to_redis] Saved user message")  # Debug
+        
+        # Save assistant response
+        if response:
+            redis_memory.add_message(thread_id, "assistant", response, {"intent": intent})
+            print(f"[save_to_redis] Saved assistant response")  # Debug
+    except RedisConnectionError as e:
+        print(f"[save_to_redis] Redis connection error: {e}")
+    except Exception as e:
+        print(f"[save_to_redis] Redis error: {e}")
     
     return state
 
