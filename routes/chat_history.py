@@ -4,6 +4,8 @@ from schema import chatHistoryResponse
 router = APIRouter()
 redis_memory = RedisMemoryService()
 
+
+#hi
 @router.get("/", response_model=chatHistoryResponse)
 async def get_chat_history(thread_id: str = Query(...)):
     try:
