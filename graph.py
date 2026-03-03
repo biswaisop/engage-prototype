@@ -9,12 +9,14 @@ from node import lead_node
 from node import issue_node
 from node import handoff_node
 from node import chat_node
-from langgraph.checkpoint.memory import InMemorySaver
+# from langgraph.checkpoint.memory import InMemorySaver
 from redis.exceptions import ConnectionError as RedisConnectionError
-checkpointer = InMemorySaver()
+# checkpointer = InMemorySaver()
 
 # Initialize Redis memory (module-level singleton)
 redis_memory = RedisMemoryService(max_messages=20, ttl_seconds=259200)
+
+
 
 def load_context(state: GraphState) -> GraphState:
     """Load conversation context from Redis"""
@@ -23,15 +25,15 @@ def load_context(state: GraphState) -> GraphState:
     try:
         if thread_id:
             context = redis_memory.get_context_string(thread_id, limit=10)
-            state["context"] = context
+            state["context"] = context or ""
             print(f"[load_context] loaded context: {context[:100] if context else 'empty'}")  # Debug
     except RedisConnectionError as e:
         print(f"[load_context] Redis connection error: {e}")
-        state["context"] = None
+        state["context"] = ""
     
     except Exception as e:
         print(f"[load_context] Redis error: {e}")
-        state["context"] = None
+        state["context"] = ""
     
     return state
 
@@ -44,8 +46,8 @@ def save_to_redis(state: GraphState) -> GraphState:
             print("[save_to_redis] No thread_id, skipping save")  # Debug
             return state
         
-        message = state.get("message", "")
-        response = state.get("result", {}).get("response", "")
+        message = state.get("message", "").strip()
+        response = state.get("result", {}).get("response", "").strip()
         intent = state.get("intent", "")
         
         print(f"[save_to_redis] message: {message[:50] if message else 'empty'}")  # Debug
@@ -60,12 +62,16 @@ def save_to_redis(state: GraphState) -> GraphState:
         if response:
             redis_memory.add_message(thread_id, "assistant", response, {"intent": intent})
             print(f"[save_to_redis] Saved assistant response")  # Debug
+        state.pop("messages", None)
     except RedisConnectionError as e:
         print(f"[save_to_redis] Redis connection error: {e}")
     except Exception as e:
         print(f"[save_to_redis] Redis error: {e}")
     
     return state
+
+def printState(s: GraphState):
+    print(s)
 
 builder = StateGraph(GraphState)
 
@@ -80,6 +86,7 @@ builder.add_node("issue_node", lambda s: issue_node(s, llm))
 builder.add_node("handoff_node", lambda s: handoff_node(s, llm))
 builder.add_node("chat_node", lambda s: chat_node(s, llm))
 builder.add_node("save_memory", save_to_redis)
+builder.add_node("print_state", printState)
 
 # Entry point
 builder.set_entry_point("load_context")
@@ -104,7 +111,11 @@ builder.add_edge("lead_node", "save_memory")
 builder.add_edge("issue_node", "save_memory")
 builder.add_edge("handoff_node", "save_memory")
 builder.add_edge("chat_node", "save_memory")
-builder.add_edge("save_memory", END)
+builder.add_edge("save_memory", "print_state")
+builder.add_edge("print_state", END)
 
 # Compile without checkpointer (Redis handles persistence)
-graph = builder.compile(checkpointer=checkpointer)
+graph = builder.compile()
+
+if __name__ == "__main__":
+    print(graph.invoke("Hello"))

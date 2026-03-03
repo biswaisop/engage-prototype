@@ -1,139 +1,3 @@
-# # node/router.py
-
-# from schema import IntentResult
-
-
-# FINAL_INTENTS = {
-#     "INFORMATION_RETRIEVAL",
-#     "LEAD_CAPTURE",
-#     "ISSUE_COMPLAINT",
-#     "HANDOFF_REQUEST",
-#     "CHAT",
-# }
-
-
-# # ---------------------------
-# # KEYWORD GROUPS
-# # ---------------------------
-
-# EMERGENCY_KEYWORDS = [
-#     "fire", "smoke", "gas", "bleeding",
-#     "emergency", "danger", "help"
-# ]
-
-# ISSUE_KEYWORDS = [
-#     "complaint", "problem", "issue",
-#     "charged", "refund", "not working",
-#     "broken", "damaged", "leaking",
-#     "dirty", "unclean", "filthy",
-#     "condoms", "trash", "garbage",
-#     "bad smell"
-# ]
-
-# BOOKING_ACTION_KEYWORDS = [
-#     "book",
-#     "booking",
-#     "reserve",
-#     "reservation",
-#     "cancel my booking",
-#     "modify my booking",
-#     "change my booking",
-#     "check availability",
-#     "availability",
-# ]
-
-# HANDOFF_KEYWORDS = [
-#     "human",
-#     "manager",
-#     "agent",
-#     "representative",
-#     "real person"
-# ]
-
-# GREETING_KEYWORDS = [
-#     "hi",
-#     "hello",
-#     "hey",
-#     "good morning",
-#     "good evening",
-# ]
-
-
-# QUESTION_STARTERS = (
-#     "what", "when", "how", "where",
-#     "who", "can", "do", "is", "are",
-#     "does", "did"
-# )
-
-
-# # ---------------------------
-# # ROUTER NODE
-# # ---------------------------
-
-# def intent_router_node(state: dict, llm=None):
-#     message = state["message"].strip().lower()
-
-#     # 🚨 1️⃣ Emergency → ISSUE_COMPLAINT
-#     if any(word in message for word in EMERGENCY_KEYWORDS):
-#         return {
-#             **state,
-#             "intent": "ISSUE_COMPLAINT",
-#             "confidence": 1.0,
-#         }
-
-#     # 🧯 2️⃣ Explicit complaint keywords → ISSUE_COMPLAINT
-#     if any(word in message for word in ISSUE_KEYWORDS):
-#         return {
-#             **state,
-#             "intent": "ISSUE_COMPLAINT",
-#             "confidence": 0.95,
-#         }
-
-#     # 🧑‍💼 3️⃣ Explicit request for human
-#     if any(word in message for word in HANDOFF_KEYWORDS):
-#         return {
-#             **state,
-#             "intent": "HANDOFF_REQUEST",
-#             "confidence": 0.95,
-#         }
-
-#     # 💰 4️⃣ Booking / Transactional Action
-#     # Important: must be action-oriented, not policy questions
-#     if any(word in message for word in BOOKING_ACTION_KEYWORDS):
-#         # If it is a direct action (not a question about policy)
-#         if not message.startswith(QUESTION_STARTERS) and "?" not in message:
-#             return {
-#                 **state,
-#                 "intent": "LEAD_CAPTURE",
-#                 "confidence": 0.95,
-#             }
-
-#     # ❓ 5️⃣ If it looks like a question → INFORMATION_RETRIEVAL
-#     if message.startswith(QUESTION_STARTERS) or "?" in message:
-#         return {
-#             **state,
-#             "intent": "INFORMATION_RETRIEVAL",
-#             "confidence": 0.95,
-#         }
-
-#     # 👋 6️⃣ Greeting
-#     if any(message.startswith(word) for word in GREETING_KEYWORDS):
-#         return {
-#             **state,
-#             "intent": "CHAT",
-#             "confidence": 0.9,
-#         }
-
-#     # 🧠 7️⃣ Default → INFORMATION_RETRIEVAL
-#     # Safer than defaulting to LEAD_CAPTURE
-#     return {
-#         **state,
-#         "intent": "INFORMATION_RETRIEVAL",
-#         "confidence": 0.7,
-#     }
-
-# node/router.py
-
 from typing import Optional
 from model import llm
 from schema import IntentResult
@@ -250,21 +114,25 @@ def fast_keyword_check(message: str) -> Optional[dict]:
 # LLM CLASSIFICATION
 # ---------------------------
 
-def classify_with_llm(message: str, history: list = None) -> dict:
+def classify_with_llm(message: str, context:str = None) -> dict:
     """
     Use LLM to classify intent with conversation context.
     """
     # Build context from history if available
     context_str = ""
-    if history and len(history) > 0:
-        recent = history[-4:]  # Last 2 exchanges
-        context_parts = []
-        for msg in recent:
-            role = msg.get("role", "user")
-            content = msg.get("content", "")[:150]  # Truncate for efficiency
-            context_parts.append(f"{role.upper()}: {content}")
-        context_str = f"\n\nRecent conversation:\n" + "\n".join(context_parts)
-    
+    # if history and len(history) > 0:
+    #     recent = history[-4:]  # Last 2 exchanges
+    #     context_parts = []
+    #     for msg in recent:
+    #         role = msg.get("role", "user")
+    #         content = msg.get("content", "")[:150]  # Truncate for efficiency
+    #         context_parts.append(f"{role.upper()}: {content}")
+    #     context_str = f"\n\nRecent conversation:\n" + "\n".join(context_parts)
+    if context:
+        # extracting last 2 exchanges
+        lines = [line.strip() for line in context.strip().split("\n") if line.strip()]
+        last_2 = lines[-4:] if len(lines) >= 4 else lines
+        context_str = f"\n\nRecent conversation:\n" + "\n".join(last_2)
     user_prompt = f"""Classify this message:{context_str}
 
 Current message: "{message}"
@@ -313,7 +181,8 @@ def intent_router_node(state: dict, llm_instance=None):
     2. LLM classification for nuanced cases
     """
     message = state.get("message", "").strip()
-    history = state.get("messages", [])
+    # history = state.get("messages", [])
+    context = state.get("context", "")
     
     if not message:
         return {
@@ -333,7 +202,7 @@ def intent_router_node(state: dict, llm_instance=None):
         }
     
     # 2️⃣ Use LLM for complex classification
-    llm_result = classify_with_llm(message, history)
+    llm_result = classify_with_llm(message, context)
     print(f"[Router] LLM classification: {llm_result['intent']} ({llm_result.get('reasoning', '')})")
     
     return {

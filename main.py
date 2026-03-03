@@ -7,9 +7,9 @@ from routes import chat_history
 app = FastAPI()
 
 
-@app.get("/api/health")
+@app.get("/")
 def health():
-    return {"status": "ok"}
+    return {"status": "ok"} 
 
 #include the chat service
 app.include_router(

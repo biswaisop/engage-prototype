@@ -12,24 +12,18 @@ def chat_node(state, llm):
     print("chat node executed")
     """Handle general chat/small talk with conversation memory."""
     query = state.get("message", "")
+    context = state.get("context", "")
+    prompt = f"""
+        previous conversation: {context}
+        user: {query}
+
+    """
     
-    # Get history using shared memory utility
-    history = memory.get_history(state, max_turns=4)
-    formatted_history = memory.format_for_llm(history)
-    
-    # Build messages using shared utility
-    messages = memory.build_messages(
-        query=query,
-        system_prompt=CHAT_SYSTEM_PROMPT,
-        history=formatted_history
-    )
-    
-    response = llm.invoke(messages)
+    response = llm.invoke(prompt)
     answer = response.content if hasattr(response, "content") else str(response)
     
     return {
         **state,
-        "messages": memory.add_to_history(state, query, answer),
         "result": {
             "intent": "CHAT",
             "response": answer,
