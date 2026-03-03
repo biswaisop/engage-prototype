@@ -28,7 +28,6 @@ def issue_node(state: dict, llm):
 
     return {
         **state,
-        "messages": memory.add_to_history(state, query, answer),
         "result": {
             "intent": "ISSUE_COMPLAINT",
             "response": answer,

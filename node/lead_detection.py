@@ -29,7 +29,7 @@ def lead_node(state, llm):
     
     return {
         **state,
-        "messages": memory.add_to_history(state, query, answer),
+
         "result": {
             "intent": "LEAD_CAPTURE",
             "response": answer,

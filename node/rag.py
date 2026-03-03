@@ -1,4 +1,4 @@
-from utils import Vector_store_service, memory
+from utils import Vector_store_service
 from model import llm
 import hashlib
 
@@ -53,7 +53,7 @@ class rag_node:
 
         return "\n\n".join(context_blocks)
 
-    def enhance_query_with_history(self, query: str, state: dict) -> str:
+    def enhance_query_with_history(self, query: str, context: str) -> str:
         """Enhance vague queries using conversation history."""
         vague_queries = [
             "tell me more", "more", "continue", "go on", "explain",
@@ -62,12 +62,13 @@ class rag_node:
         ]
         
         if query.lower().strip() in vague_queries or len(query.split()) <= 3:
-            history = memory.get_history(state, max_turns=2)
-            if history:
+            if context:
                 # Get last user message for context
-                for msg in reversed(history):
-                    if msg.get("role") == "user":
-                        return f"{msg['content']} {query}"
+                lines = context.strip().split('\n')
+                for line in reversed(lines):
+                    if line.startswith('USER: '):
+                        last_user_msg = line.replace('USER:', '').strip()
+                        return f"{last_user_msg} {query}"
         return query
 
     def rag_node(self, state: dict):
@@ -78,6 +79,7 @@ class rag_node:
         print("rag node executed")
         query = state.get("message", "").strip()
         org_id = state.get("org_id", "default")
+        context = state.get("context", "")
         
         if not query:
             return {
@@ -91,21 +93,21 @@ class rag_node:
         
         try:
             # Enhance query with history for better retrieval
-            enhanced_query = self.enhance_query_with_history(query, state)
+            enhanced_query = self.enhance_query_with_history(query, context)
             
             # Retrieve from vector store using enhanced query
             vector_store = Vector_store_service(org_id)
             retrieved = vector_store.retrieve_documents(query=enhanced_query)
             
-            # Get history for LLM context
-            history = memory.get_history(state, max_turns=4)
-            formatted_history = memory.format_for_llm(history)
+            # # Get history for LLM context
+            # history = memory.get_history(state, max_turns=4)
+            # formatted_history = memory.format_for_llm(history)
             
             if retrieved.get("status") != "success":
                 response_text = "Knowledge base temporarily unavailable."
                 return {
                     **state,
-                    "messages": memory.add_to_history(state, query, response_text),
+                    # "messages": memory.add_to_history(state, query, response_text),
                     "result": {
                         "status": "error",
                         "response": response_text,
@@ -114,16 +116,16 @@ class rag_node:
                 }
             
             # Even with no docs, if we have history, let LLM try to help
-            context = self.build_context(retrieved)
+            doc_context = self.build_context(retrieved)
             
-            if retrieved.get("filtered_count", 0) == 0 and not history:
+            if retrieved.get("filtered_count", 0) == 0 and not context:
                 response_text = (
                     "I don't have that information. "
                     "Let me connect you to a human agent."
                 )
                 return {
                     **state,
-                    "messages": memory.add_to_history(state, query, response_text),
+                    # "messages": memory.add_to_history(state, query, response_text),
                     "result": {
                         "status": "no_context",
                         "response": response_text,
@@ -132,21 +134,23 @@ class rag_node:
                 }
             
             # Build messages using shared utility
-            messages = memory.build_messages(
-                query=query,
-                system_prompt=RAG_SYSTEM_PROMPT,
-                history=formatted_history,
-                context=context if context else "No additional context available."
-            )
+            prompt = f"""Conversation history:
+                {context}
+
+                Knowledge base context:
+                {doc_context if doc_context else "No additional context available."}
+
+                User question: {query}
+            """
             
             # Generate response
-            response = self.llm.invoke(messages)
+            response = self.llm.invoke(prompt)
             answer = response.content if hasattr(response, "content") else str(response)
             
             # Return updated state with new history
             return {
                 **state,
-                "messages": memory.add_to_history(state, query, answer),
+                # "messages": memory.add_to_history(state, query, answer),
                 "result": {
                     "status": "success",
                     "response": answer,
@@ -162,7 +166,7 @@ class rag_node:
             )
             return {
                 **state,
-                "messages": memory.add_to_history(state, query, response_text),
+                # "messages": memory.add_to_history(state, query, response_text),
                 "result": {
                     "status": "error",
                     "response": response_text,

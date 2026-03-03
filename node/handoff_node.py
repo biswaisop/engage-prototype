@@ -9,7 +9,6 @@ def handoff_node(state, llm):
     
     return {
         **state,
-        "messages": memory.add_to_history(state, query, response_text),
         "result": {
             "intent": "HANDOFF_REQUEST",
             "response": response_text,
