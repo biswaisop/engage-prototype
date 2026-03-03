@@ -31,7 +31,6 @@ def issue_node(state: dict, llm):
         "result": {
             "intent": "ISSUE_COMPLAINT",
             "response": answer,
-            "confidence": 1.0,
             "actions": [
                 {
                     "type": "CREATE_ISSUE",

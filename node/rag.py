@@ -87,7 +87,7 @@ class rag_node:
                 "result": {
                     "status": "failed",
                     "response": "Query cannot be empty.",
-                    "confidence": 0.0
+
                 }
             }
         
@@ -111,7 +111,6 @@ class rag_node:
                     "result": {
                         "status": "error",
                         "response": response_text,
-                        "confidence": 0.0
                     }
                 }
             
@@ -129,7 +128,6 @@ class rag_node:
                     "result": {
                         "status": "no_context",
                         "response": response_text,
-                        "confidence": 0.3
                     }
                 }
             
@@ -154,7 +152,6 @@ class rag_node:
                 "result": {
                     "status": "success",
                     "response": answer,
-                    "confidence": 0.9 if retrieved.get("filtered_count", 0) >= 2 else 0.7,
                     "intent": "INFORMATION_RETRIEVAL"
                 }
             }
@@ -171,6 +168,6 @@ class rag_node:
                     "status": "error",
                     "response": response_text,
                     "error": str(e),
-                    "confidence": 0.0
+
                 }
             }

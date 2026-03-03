@@ -33,7 +33,6 @@ def lead_node(state, llm):
         "result": {
             "intent": "LEAD_CAPTURE",
             "response": answer,
-            "confidence": 0.95,
             "actions": [
                 {
                     "type": "CREATE_LEAD",

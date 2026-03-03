@@ -69,7 +69,7 @@ Your job is to classify user messages into exactly ONE of these intents:
 
 ## OUTPUT FORMAT:
 Respond with ONLY a JSON object, no other text:
-{"intent": "INTENT_NAME", "confidence": 0.XX, "reasoning": "brief explanation"}"""
+{"intent": "INTENT_NAME"}"""
 
 
 # ---------------------------
@@ -91,21 +91,21 @@ def fast_keyword_check(message: str) -> Optional[dict]:
     
     # Emergency - always fast path
     if any(word in msg for word in EMERGENCY_KEYWORDS):
-        return {"intent": "ISSUE_COMPLAINT", "confidence": 1.0}
+        return {"intent": "ISSUE_COMPLAINT"}
     
     # Explicit handoff request
     if any(word in msg for word in HANDOFF_KEYWORDS):
-        return {"intent": "HANDOFF_REQUEST", "confidence": 0.98}
+        return {"intent": "HANDOFF_REQUEST"}
     
     # Simple greetings
     for pattern in GREETING_PATTERNS:
         if re.match(pattern, msg):
-            return {"intent": "CHAT", "confidence": 0.95}
+            return {"intent": "CHAT"}
     
     # Simple chat patterns
     for pattern in CHAT_PATTERNS:
         if re.match(pattern, msg):
-            return {"intent": "CHAT", "confidence": 0.90}
+            return {"intent": "CHAT"}
     
     return None  # Needs LLM classification
 
@@ -160,14 +160,12 @@ Respond with JSON only."""
             
             return {
                 "intent": intent,
-                "confidence": float(result.get("confidence", 0.8)),
-                "reasoning": result.get("reasoning", "")
             }
     except Exception as e:
         print(f"LLM classification error: {e}")
     
     # Fallback
-    return {"intent": "CHAT", "confidence": 0.5, "reasoning": "fallback"}
+    return {"intent": "CHAT"}
 
 
 # ---------------------------
@@ -188,7 +186,6 @@ def intent_router_node(state: dict, llm_instance=None):
         return {
             **state,
             "intent": "CHAT",
-            "confidence": 0.0,
         }
     
     # 1️⃣ Try fast keyword matching first
@@ -197,18 +194,16 @@ def intent_router_node(state: dict, llm_instance=None):
         print(f"[Router] Fast match: {fast_result['intent']}")
         return {
             **state,
-            "intent": fast_result["intent"],
-            "confidence": fast_result["confidence"],
+            "intent": fast_result["intent"]
         }
     
     # 2️⃣ Use LLM for complex classification
     llm_result = classify_with_llm(message, context)
-    print(f"[Router] LLM classification: {llm_result['intent']} ({llm_result.get('reasoning', '')})")
+    print(f"[Router] LLM classification: {llm_result['intent']}")
     
     return {
         **state,
         "intent": llm_result["intent"],
-        "confidence": llm_result["confidence"],
     }
 
 
@@ -224,7 +219,7 @@ def classify_batch(messages: list[str]) -> list[dict]:
     batch_prompt = f"""{INTENT_CLASSIFICATION_PROMPT}
 
 Classify each message and return a JSON array:
-[{{"message": "...", "intent": "...", "confidence": 0.XX}}]
+[{{"message": "...", "intent": "..."}}]
 
 Messages to classify:
 {json.dumps(messages, indent=2)}"""
@@ -240,4 +235,4 @@ Messages to classify:
     except Exception as e:
         print(f"Batch classification error: {e}")
     
-    return [{"intent": "CHAT", "confidence": 0.5} for _ in messages]
+    return [{"intent": "CHAT"} for _ in messages]
