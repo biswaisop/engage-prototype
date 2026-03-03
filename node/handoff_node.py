@@ -12,7 +12,6 @@ def handoff_node(state, llm):
         "result": {
             "intent": "HANDOFF_REQUEST",
             "response": response_text,
-            "confidence": 1.0,
             "actions": [
                 {
                     "type": "INITIATE_HANDOFF",

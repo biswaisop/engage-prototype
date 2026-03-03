@@ -27,7 +27,6 @@ def chat_node(state, llm):
         "result": {
             "intent": "CHAT",
             "response": answer,
-            "confidence": 0.7,
             "actions": []
         }
     }

@@ -24,9 +24,13 @@ def load_context(state: GraphState) -> GraphState:
     print(f"[load_context] thread_id: {thread_id}")  # Debug
     try:
         if thread_id:
-            context = redis_memory.get_context_string(thread_id, limit=10)
-            state["context"] = context or ""
+            context = redis_memory.get_context_string(thread_id, limit=6)
+            
+            # ✅ Hard cap context at 1000 chars to prevent bloat
+            if context and len(context) > 1000:
+                context = context[-1000:]
             print(f"[load_context] loaded context: {context[:100] if context else 'empty'}")  # Debug
+            state["context"] = context or ""
     except RedisConnectionError as e:
         print(f"[load_context] Redis connection error: {e}")
         state["context"] = ""
