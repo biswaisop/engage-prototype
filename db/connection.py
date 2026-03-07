@@ -1,41 +1,105 @@
-from pymongo import MongoClient
-from pymongo.collection import Collection
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection, AsyncIOMotorDatabase
 import os
 from dotenv import load_dotenv
+import logging
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
 
 
-class MongoDB:
-    _client: MongoClient = None
+DB_NAME = "front-desk"
 
+class MongoDb:
+    _client: AsyncIOMotorClient = None
+    
     @classmethod
-    def get_client(cls) -> MongoClient:
+    def connect(cls):
         if cls._client is None:
-            cls._client = MongoClient(os.getenv("MONGODB"))
+            uri = os.getenv("MONGODB")
+            if not uri:
+                raise ValueError("MONGODB environment variable not set")
+            cls._client = AsyncIOMotorClient(
+                uri,
+                maxPoolSize=100,
+                minPoolSize=5,
+                serverSelectionTimeoutMS=5000
+            )
+            logger.info("MongoDB Connected")
+
+    @classmethod
+    def disconnect(cls):
+        if cls._client is not None:
+            cls._client.close()
+            cls._client = None
+            logger.info("MongoDB Disconnected")
+
+    @classmethod 
+    def get_client(cls) -> AsyncIOMotorClient:
+        if cls._client is None:
+            raise RuntimeError("MongoDB not connected. Call MongoDb.connect() first.")
         return cls._client
-
-    @classmethod
-    def get_collection(cls,  org_id: str, collection_name: str) -> Collection:
-        client = cls.get_client()
-        db = client[org_id]
-        return db[collection_name]
     
     @classmethod
-    def conversations(cls) -> Collection:
-        return cls.get_collection("chats")
+    def get_db(cls) -> AsyncIOMotorDatabase:
+        if cls._client is None:
+            raise RuntimeError("MongoDB not connected. Call MongoDB.connect() first.")
+        return cls._client[DB_NAME]
     
     @classmethod
-    def leads(cls, org_id: str) -> Collection:
-        return cls.get_collection(org_id,"leads")
+    def orgs(cls) -> AsyncIOMotorCollection:
+        return cls.get_db()["orgs"]
     
+    @classmethod
+    def conversations(cls) -> AsyncIOMotorCollection:
+        return cls.get_db()["conversations"]
+    
+    @classmethod
+    def leads(cls) -> AsyncIOMotorCollection:
+        return cls.get_db()["leads"]
+    
+    @classmethod
+    def issues(cls) -> AsyncIOMotorCollection:
+        return cls.get_db()["issues"]
+    
+    # @classmethod
+    # def conversations(cls) -> AsyncIOMotorCollection:
+    #     return cls.get_db()["conversations"]
+    
+    @classmethod
+    async def ping(cls) -> bool:
+        try:
+            await cls.get_client().admin.command("ping")
+            return True
+        except Exception as e:
+            logger.error(f"MongoDB ping failed: {e}")
+            return False
+        
 
-# client = MongoClient(
-#     os.getenv("MONGOURI"),
-#     maxPoolSize=100,        # max concurrent connections
-#     minPoolSize=5,          # keep 5 alive even when idle
-#     serverSelectionTimeoutMS=5000  # fail fast if DB is unreachable
-#     )
+    #indexes
+    @classmethod
+    async def setup_indexes(cls):
+        await cls.orgs().create_index("org_id", unique = True)
+
+        await cls.conversations().create_index("org_id")
+        await cls.conversations().create_index(
+            [("org_id", 1), ("thread_id", 1)], unique = True
+        )
+
+        await cls.leads().create_index("org_id")
+        await cls.leads().create_index(
+            [("org_id", 1), ("thread_id", 1)]
+        )
+        await cls.leads().create_index(
+            [("org_id", 1), ("status", 1)]
+        )
+
+        await cls.issues().create_index("org_id")
+        await cls.issues().create_index(
+            [("org_id", 1), ("status", 1)]
+        )
+
+        logger.info("MongoDB indexes created")
 
 
+    

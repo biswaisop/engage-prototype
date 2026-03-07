@@ -45,7 +45,15 @@ class leadExtraction(BaseModel):
     guest_count: Optional[str] = None
     notes: Optional[str] = None
 
+class LeadStatus(str, Enum):
+    NEW = "NEW"
+    CONTACTED = "CONTACTED"
+    CONVERTED = "CONVERTED"
+    LOST = "LOST"
 
+class LeadSource(str, Enum):
+    CHAT = "CHAT"
+    MANUAL = "MANUAL"
 class leadDocument(BaseModel):
     """Document stored in mongoDB org_id.leads collectin"""
     thread_id: str
@@ -58,17 +66,8 @@ class leadDocument(BaseModel):
     room_type: Optional[str] = None
     guest_count: Optional[int] = None
     notes: Optional[str] = None
-    source: str = "CHAT"
-    status: str = "NEW"
+    source: LeadSource = LeadSource.CHAT
+    status: LeadStatus = LeadStatus.NEW
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-class LeadStatus(str, Enum):
-    NEW = "NEW"
-    CONTACTED = "CONTACTED"
-    CONVERTED = "CONVERTED"
-    LOST = "LOST"
-
-class LeadSource(str, Enum):
-    CHAT = "CHAT"
-    MANUAL = "MANUAL"
