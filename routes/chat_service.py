@@ -1,5 +1,5 @@
 from schema import chatMessageResponse, chatMessageRequest
-from schema import GraphState
+from schema.stateSchema import GraphState
 from graph import graph
 from fastapi import APIRouter, HTTPException, status
 import asyncio

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query, HTTPException
 from utils.redis_memory import RedisMemoryService
-from schema import chatHistoryResponse
+from schema.chatSchema import chatHistoryResponse
 router = APIRouter()
 redis_memory = RedisMemoryService()
 

@@ -1,14 +1,14 @@
 # graph.py
 from langgraph.graph import StateGraph, END
-from model import llm
-from schema import GraphState
+from model.llm import llm
+from schema.stateSchema import GraphState
 from utils.redis_memory import RedisMemoryService
-from node import intent_router_node
-from node import rag_node
-from node import lead_node
-from node import issue_node
-from node import handoff_node
-from node import chat_node
+from node.router import intent_router_node
+from node.rag import rag_node
+from node.lead_detection import lead_node
+from node.issue_detection import issue_node
+from node.handoff_node import handoff_node
+from node.chat_node import chat_node
 # from langgraph.checkpoint.memory import InMemorySaver
 from redis.exceptions import ConnectionError as RedisConnectionError
 # checkpointer = InMemorySaver()

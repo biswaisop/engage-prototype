@@ -1,5 +1,5 @@
-from utils import Vector_store_service
-from model import llm
+from utils.vec_store import Vector_store_service
+from model.llm import llm
 import hashlib
 
 

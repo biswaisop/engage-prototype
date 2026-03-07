@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.routing import APIRouter
 from fastapi.responses import Response
-from routes import chat_service
-from routes import chat_history
+from routes.chat_service import chat_service
+from routes.chat_history import chat_history
 
 
 app = FastAPI()
