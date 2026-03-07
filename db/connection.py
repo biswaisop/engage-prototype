@@ -17,12 +17,25 @@ class MongoDB:
         return cls._client
 
     @classmethod
-    def get_collection(cls, collection_name: str) -> Collection:
+    def get_collection(cls,  org_id: str, collection_name: str) -> Collection:
         client = cls.get_client()
-        db = client[os.getenv("MONGODB-NAME", "hotel-chatbot")]
+        db = client[org_id]
         return db[collection_name]
     
     @classmethod
     def conversations(cls) -> Collection:
         return cls.get_collection("chats")
     
+    @classmethod
+    def leads(cls, org_id: str) -> Collection:
+        return cls.get_collection(org_id,"leads")
+    
+
+# client = MongoClient(
+#     os.getenv("MONGOURI"),
+#     maxPoolSize=100,        # max concurrent connections
+#     minPoolSize=5,          # keep 5 alive even when idle
+#     serverSelectionTimeoutMS=5000  # fail fast if DB is unreachable
+#     )
+
+
