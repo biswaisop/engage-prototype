@@ -1,4 +1,4 @@
-from schema import chatMessageResponse, chatMessageRequest
+from schema.chatSchema import chatMessageResponse, chatMessageRequest
 from schema.stateSchema import GraphState
 from graph import graph
 from fastapi import APIRouter, HTTPException, status
@@ -22,13 +22,17 @@ async def chat_message(request: chatMessageRequest):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Invalid graph response structure"
             )
+            if not response_text:
+                raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Invalid graph response structure"
+            )
             return chatMessageResponse(
                 response=response_text,
                 thread_id=thread_id,
                 org_id=request.org_id
             )
-    except HTTPException as e:
-        raise HTTPException(
-        status_code=500,
-        detail="Chat processing failed"
-    )
+    except HTTPException:
+        raise  # re-raise as-is
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Chat processing failed: {str(e)}")

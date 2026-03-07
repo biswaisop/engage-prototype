@@ -12,7 +12,7 @@ async def get_chat_history(thread_id: str = Query(...)):
         messages = redis_memory.get_message(thread_id=thread_id)
         return chatHistoryResponse(
             thread_id=thread_id,
-            message=messages
+            messages=messages
         )
     except Exception as e: 
         raise HTTPException(status_code=500, detail=f"failed to retrieve history: {str(e)}")
