@@ -1,1 +1,19 @@
-from .schemas import Action, GraphOutput, IntentResult, GraphState, chatMessageRequest, chatMessageResponse, chatHistoryResponse, leadForm, leadResponse
+from .stateSchema import (
+    Action, 
+    GraphOutput, 
+    IntentResult, 
+    GraphState,   
+)
+
+from .chatSchema import (
+    chatMessageRequest, 
+    chatMessageResponse, 
+    chatHistoryResponse, 
+)
+
+from .leadSchema import (
+    leadForm, 
+    leadResponse,
+    leadDocument,
+    leadExtraction
+)

@@ -79,7 +79,7 @@ Respond with ONLY a JSON object, no other text:
 EMERGENCY_KEYWORDS = ["fire", "smoke", "gas", "bleeding", "emergency", "danger"]
 HANDOFF_KEYWORDS = ["human", "manager", "agent", "representative", "real person", "speak to someone"]
 GREETING_PATTERNS = ["^hi$", "^hello$", "^hey$", "^good morning", "^good evening", "^good afternoon"]
-CHAT_PATTERNS = ["^ok$", "^okay$", "^sure$", "^yes$", "^no$", "^thanks", "^thank you", "^bye", "^clear$", "^i am ", "^my name is "]
+CHAT_PATTERNS = ["^thanks", "^thank you", "^bye", "^clear$", "^i am ", "^my name is "]
 
 
 def fast_keyword_check(message: str) -> Optional[dict]:

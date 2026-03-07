@@ -1,7 +1,21 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any
-from datetime import datetime, timezone
+from typing import List, Any, Dict, Optional
 from enum import Enum
+from datetime import datetime, timezone
+
+class chatMessageRequest(BaseModel):
+    thread_id: str
+    message: str
+    org_id: str
+
+class chatMessageResponse(BaseModel):
+    response: str
+    thread_id: str
+    org_id: str
+
+class chatHistoryResponse(BaseModel):
+    thread_id: str
+    message: List[Any]
 
 class MessageRole(str, Enum):
     USER = "user"
@@ -29,5 +43,3 @@ class ChatRequest(BaseModel):
     org_id: str
     message: str
     user_id: Optional[str] = None
-
-

@@ -4,6 +4,7 @@ from fastapi.responses import Response
 from routes import chat_service
 from routes import chat_history
 
+
 app = FastAPI()
 
 
@@ -24,3 +25,10 @@ app.include_router(
     prefix="/api/chat_history",
     tags = ["chat-history"]
 )
+
+#include the leads service
+# app.include_router(
+#     lead_capture.router,
+#     prefix="/api/leads",
+#     tags=["leads"]
+# )
