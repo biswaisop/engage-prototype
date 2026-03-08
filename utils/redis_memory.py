@@ -1,29 +1,72 @@
 import redis
+import redis.asyncio as aioredis 
 import json
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timezone
 import os
+import logging
 from dotenv import load_dotenv
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+
+class RedisClient:
+    """Singleton async Redis connection"""
+    _client: aioredis.Redis = None
+
+    @classmethod
+    def connect(cls):
+        if cls._client is None:
+            cls._client = aioredis.Redis(
+                host=os.getenv("REDIS_HOST", "localhost"),
+                port = int(os.getenv("REDIS_PORT", 6379)),
+                decode_responses=True
+            )
+            logger.info("Redis connected")
+        
+    @classmethod 
+    def disconnect(cls):
+        if cls._client is not None:
+            cls._client.close()
+            cls._client = None
+            logger.info("Redis disconnected")
+    
+    @classmethod
+    def get(cls) -> aioredis.Redis:
+        if cls._client is None:
+            raise RuntimeError("Redis not connected, call RedisClient.Connect first")
+        return cls._client
+
+    @classmethod
+    async def ping(cls) -> bool:
+        try:
+            await cls.get().ping()
+            return True
+        except Exception as e:
+            logger.error(f"Redis ping failed: {e}")
+            return False
+
+
 class RedisMemoryService:
+    """
+    Per-request service — instantiated with org-specific settings
+    via FastAPI dependency injection.
+    """
     def __init__(self, max_messages: int = 30, ttl_seconds: int = 259200):
-        self.client = redis.Redis(
-            host = os.getenv("REDIS_HOST", "localhost"),
-            port = int(os.getenv("REDIS_PORT", 6379)),
-            decode_responses=True
-        )
+        self.client = RedisClient.get()
         self.max_messages = max_messages
         self.ttl = ttl_seconds
 
+    # ── Key helpers ───────────────────────────────────────────────
     def _key(self, thread_id: str) -> str:
         return f"chat:memory:{thread_id}"
     
     def _state_key(self, thread_id) -> str:
         return f"chat:state:{thread_id}"        
 
-    def add_message(self, thread_id: str, role: str, content: str, metadata: Dict = None):
+    # ── Messages ──────────────────────────────────────────────────
+    async def add_message(self, thread_id: str, role: str, content: str, metadata: Dict = None):
         """Add message to sliding window in redis"""
         key = self._key(thread_id=thread_id)
         message = {
@@ -37,42 +80,49 @@ class RedisMemoryService:
         pipe.rpush(key, json.dumps(message))
         pipe.ltrim(key, -self.max_messages, -1)
         pipe.expire(key, self.ttl)
-        pipe.execute()
+        await pipe.execute()
 
-    def get_message(self, thread_id: str, limit: int = None) -> list[Dict]:
+    async def get_message(self, thread_id: str, limit: int = None) -> list[Dict]:
         key = self._key(thread_id)
         limit = limit or self.max_messages
-        messages = self.client.lrange(key, -limit, -1)
+        messages = await self.client.lrange(key, -limit, -1)
         return [json.loads(m) for m in messages]
 
-    def get_context_string(self, thread_id: str, limit: int = 10) -> str:
+    async def get_context_string(self, thread_id: str, limit: int = 10) -> str:
         """Get formatted for llm"""
-        messages = self.get_message(thread_id=thread_id, limit = limit)
+        messages = await self.get_message(thread_id=thread_id, limit = limit)
         if not messages:
             return ""
         context_parts = []
-        for msg in messages:
-            role = msg["role"].upper()
-            context_parts.append(f"{role}:{msg['content']}")
+        # for msg in messages:
+        #     role = msg["role"].upper()
+        #     context_parts.append(f"{role}:{msg['content']}")
 
-        return "\n".join(context_parts)
+        # return "\n".join(context_parts)
 
-    def set_state(self, thread_id: str, state: Dict[str, Any]):
+        return "\n".join(
+            f"{msg['role'].upper()}: {msg['content']}"
+            for msg in messages
+        )
+
+
+    async def set_state(self, thread_id: str, state: Dict[str, Any]):
         """Store session state ( intent, slots, etc)"""
         key = self._state_key(thread_id=thread_id)
-        self.client.setex(key, self.ttl, json.dumps(state))    
+        await self.client.setex(key, self.ttl, json.dumps(state))    
 
-    def get_state(self, thread_id: str) -> Optional[Dict[str, Any]]:
+    async def get_state(self, thread_id: str) -> Optional[Dict[str, Any]]:
         """Store session state intent"""
         key = self._state_key(thread_id)
-        data = self.client.get(key)
+        data = await self.client.get(key)
         return json.loads(data) if data else None
     
-    def clear(self, thread_id: str):
+    # ── Lifecycle ─────────────────────────────────────────────────
+    async def clear(self, thread_id: str):
         """Clear thread memory"""
-        self.client.delete(self._key(thread_id), self._state_key(thread_id))
+        await self.client.delete(self._key(thread_id), self._state_key(thread_id))
 
-    def refresh_ttl(self, thread_id: str):
+    async def refresh_ttl(self, thread_id: str):
         """Extend TTL on activity"""
-        self.client.expire(self._key(thread_id), self.ttl)
-        self.client.expire(self._state_key(thread_id), self.ttl)
+        await self.client.expire(self._key(thread_id), self.ttl)
+        await self.client.expire(self._state_key(thread_id), self.ttl)

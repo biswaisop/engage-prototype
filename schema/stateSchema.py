@@ -1,5 +1,8 @@
 from pydantic import BaseModel, EmailStr
-from typing import List, Optional, Dict, Any, TypedDict
+from typing import List, Optional, Dict, Any, TypedDict, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from utils.redis_memory import RedisMemoryService   
 
 class Action (BaseModel):
     type: str
@@ -16,15 +19,23 @@ class IntentResult(BaseModel):
 
 class GraphState(TypedDict, total=False):
     """State shared across all graph nodes."""
-    message: str                          # Current user input  
-    thread_id: str      # Conversation history (auto-managed by checkpointer)
-    org_id: str                           # Organization ID for multi-tenant
-    intent: Optional[str]                 # Detected intent          
-    next_node: Optional[str]              # Next node to route to
+    # message: str                          # Current user input  
+    # thread_id: str      # Conversation history (auto-managed by checkpointer)
+    # org_id: str                           # Organization ID for multi-tenant
+    # intent: Optional[str]                 # Detected intent          
+    # next_node: Optional[str]              # Next node to route to
+    # context: Optional[str]
+    # result: Optional[Dict[str, Any]]      # Node output
+    # redis_memory: Optional[Any] 
+    message: str
+    messages: List[Dict[str, str]]
+    thread_id: str
+    org_id: str
+    intent: Optional[str]
+    confidence: Optional[float]
     context: Optional[str]
-    result: Optional[Dict[str, Any]]      # Node output
-    redis_memory: Optional[Any] 
-
+    result: Optional[Dict]
+    redis_memory: Optional[Any]   # ← add this
 
 
 
