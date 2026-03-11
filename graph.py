@@ -23,13 +23,14 @@ logger = logging.getLogger(__name__)
 async def load_context(state: GraphState) -> GraphState:
     """Load conversation context from Redis"""
     thread_id = state.get("thread_id", "")
+    org_id = state.get("org_id", "")
     redis_memory = state.get("redis_memory")
     if not redis_memory:
         state["context"] = ""
         return state
     try:
         if thread_id:
-            context = await redis_memory.get_context_string(thread_id, limit=6)
+            context = await redis_memory.get_context_string(thread_id,org_id, limit=6)
             if context and len(context) > 1000:
                 context = context[-1000:]
             state["context"] = context or ""
@@ -46,8 +47,13 @@ async def load_context(state: GraphState) -> GraphState:
 async def save_to_redis(state: GraphState) -> GraphState:
     """Save interaction to Redis"""
     thread_id = state.get("thread_id", "")
-    redis_memory = state.get("redis_memory") 
+    org_id = state.get("org_id", "")
+    redis_memory = state.get("redis_memory")
+
+    logger.info(f"[save_to_redis] thread_id={thread_id} org_id={org_id} redis_memory={redis_memory}")  # ← add this
+
     if not thread_id or not redis_memory:
+        logger.warning("[save_to_redis] Skipping")
         return state
     try:
         # if not thread_id:
@@ -62,11 +68,11 @@ async def save_to_redis(state: GraphState) -> GraphState:
         
         # Save user message
         if message:
-            await redis_memory.add_message(thread_id, "user", message)
+            await redis_memory.add_message(thread_id,org_id, "user", message)
         
         # Save assistant response
         if response:
-            await redis_memory.add_message(thread_id, "assistant", response, {"intent": intent})
+            await redis_memory.add_message(thread_id, org_id, "assistant", response, {"intent": intent})
         state.pop("messages", None)
     except RedisConnectionError as e:
         logger.error(f"[save_to_redis] Redis error: {e}")
