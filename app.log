@@ -1,0 +1,436 @@
+2026-03-08 00:14:32 | INFO | db.connection | MongoDB Connected
+2026-03-08 00:14:32 | INFO | db.connection | MongoDB indexes created
+2026-03-08 00:38:30 | INFO | db.connection | MongoDB Disconnected
+2026-03-08 00:49:05 | INFO | db.connection | MongoDB Connected
+2026-03-08 00:49:05 | INFO | db.connection | MongoDB indexes created
+2026-03-08 00:55:23 | INFO | db.connection | MongoDB Disconnected
+2026-03-08 00:55:42 | INFO | uvicorn.error | Started server process [2964]
+2026-03-08 00:55:42 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-08 00:55:42 | INFO | db.connection | MongoDB Connected
+2026-03-08 00:55:42 | INFO | db.connection | MongoDB indexes created
+2026-03-08 00:55:42 | INFO | uvicorn.error | Application startup complete.
+2026-03-08 00:55:55 | INFO | uvicorn.error | Shutting down
+2026-03-08 00:55:55 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-08 00:55:55 | INFO | db.connection | MongoDB Disconnected
+2026-03-08 00:55:55 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-08 00:55:55 | INFO | uvicorn.error | Finished server process [2964]
+2026-03-08 00:56:12 | INFO | uvicorn.error | Started server process [3896]
+2026-03-08 00:56:12 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-08 00:56:12 | INFO | db.connection | MongoDB Connected
+2026-03-08 00:56:12 | INFO | db.connection | MongoDB indexes created
+2026-03-08 00:56:12 | INFO | uvicorn.error | Application startup complete.
+2026-03-08 00:57:06 | INFO | uvicorn.error | Shutting down
+2026-03-08 00:57:06 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-08 00:57:06 | INFO | db.connection | MongoDB Disconnected
+2026-03-08 00:57:06 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-08 00:57:06 | INFO | uvicorn.error | Finished server process [3896]
+2026-03-08 00:57:23 | INFO | uvicorn.error | Started server process [31472]
+2026-03-08 00:57:23 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-08 00:57:23 | INFO | db.connection | MongoDB Connected
+2026-03-08 00:57:23 | INFO | db.connection | MongoDB indexes created
+2026-03-08 00:57:23 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 17:06:22 | INFO | uvicorn.error | Started server process [23320]
+2026-03-11 17:06:22 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 17:06:22 | INFO | db.connection | MongoDB Connected
+2026-03-11 17:06:22 | INFO | utils.redis_memory | Redis connected
+2026-03-11 17:06:22 | INFO | db.connection | MongoDB indexes created
+2026-03-11 17:06:22 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 17:06:54 | INFO | uvicorn.access | 127.0.0.1:53681 - "GET / HTTP/1.1" 404
+2026-03-11 17:06:54 | INFO | uvicorn.access | 127.0.0.1:53681 - "GET /favicon.ico HTTP/1.1" 404
+2026-03-11 17:06:59 | INFO | uvicorn.access | 127.0.0.1:57043 - "GET /docs HTTP/1.1" 200
+2026-03-11 17:07:00 | INFO | uvicorn.access | 127.0.0.1:57043 - "GET /openapi.json HTTP/1.1" 200
+2026-03-11 17:07:44 | INFO | uvicorn.error | Shutting down
+2026-03-11 17:07:44 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-11 17:07:44 | INFO | db.connection | MongoDB Disconnected
+2026-03-11 17:07:44 | INFO | utils.redis_memory | Redis disconnected
+2026-03-11 17:07:44 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-11 17:07:44 | INFO | uvicorn.error | Finished server process [23320]
+2026-03-11 17:07:59 | INFO | uvicorn.error | Started server process [13608]
+2026-03-11 17:07:59 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 17:07:59 | INFO | db.connection | MongoDB Connected
+2026-03-11 17:07:59 | INFO | utils.redis_memory | Redis connected
+2026-03-11 17:07:59 | INFO | db.connection | MongoDB indexes created
+2026-03-11 17:07:59 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 17:07:59 | ERROR | uvicorn.error | Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\engage-prototype\.venv\Lib\site-packages\starlette\routing.py", line 701, in lifespan
+    await receive()
+  File "D:\engage-prototype\.venv\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+2026-03-11 17:08:12 | INFO | uvicorn.error | Started server process [15900]
+2026-03-11 17:08:12 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 17:08:12 | INFO | db.connection | MongoDB Connected
+2026-03-11 17:08:12 | INFO | utils.redis_memory | Redis connected
+2026-03-11 17:08:12 | INFO | db.connection | MongoDB indexes created
+2026-03-11 17:08:12 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 17:08:12 | INFO | uvicorn.access | 127.0.0.1:49880 - "GET /docs HTTP/1.1" 200
+2026-03-11 17:08:12 | INFO | uvicorn.access | 127.0.0.1:49880 - "GET /openapi.json HTTP/1.1" 200
+2026-03-11 17:15:33 | INFO | uvicorn.access | 127.0.0.1:55305 - "GET /health HTTP/1.1" 200
+2026-03-11 17:23:44 | INFO | uvicorn.access | 127.0.0.1:59436 - "POST /api/chat/?org_id=test-org-2 HTTP/1.1" 404
+2026-03-11 17:37:55 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 17:37:55 | INFO | uvicorn.access | 127.0.0.1:59291 - "POST /api/chat/?org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:43:21 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 17:43:21 | INFO | uvicorn.access | 127.0.0.1:60511 - "POST /api/chat/?org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:44:23 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 17:44:23 | INFO | uvicorn.access | 127.0.0.1:60855 - "POST /api/chat/?org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:44:41 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 17:44:41 | INFO | uvicorn.access | 127.0.0.1:64818 - "POST /api/chat/?org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:44:45 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 17:44:45 | INFO | uvicorn.access | 127.0.0.1:64818 - "POST /api/chat/?org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:44:49 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 17:44:50 | INFO | uvicorn.access | 127.0.0.1:64818 - "POST /api/chat/?org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:45:57 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 17:45:57 | INFO | uvicorn.access | 127.0.0.1:56306 - "POST /api/chat/?org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:46:54 | INFO | uvicorn.access | 127.0.0.1:62923 - "GET /api/chat_history/?thread_id=test2&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:47:25 | INFO | uvicorn.access | 127.0.0.1:65462 - "GET /api/chat_history/?thread_id=test1&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:48:36 | INFO | uvicorn.access | 127.0.0.1:53492 - "GET /api/chat_history/?thread_id=test1&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:48:39 | INFO | uvicorn.access | 127.0.0.1:53492 - "GET /api/chat_history/?thread_id=test1&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:48:44 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 17:48:44 | INFO | uvicorn.access | 127.0.0.1:53492 - "POST /api/chat/?org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:49:01 | INFO | uvicorn.access | 127.0.0.1:63475 - "GET /api/chat_history/?thread_id=test2&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 17:52:02 | INFO | uvicorn.error | Shutting down
+2026-03-11 17:52:02 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-11 17:52:02 | INFO | db.connection | MongoDB Disconnected
+2026-03-11 17:52:03 | INFO | utils.redis_memory | Redis disconnected
+2026-03-11 17:52:03 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-11 17:52:03 | INFO | uvicorn.error | Finished server process [15900]
+2026-03-11 17:57:40 | INFO | uvicorn.error | Started server process [28936]
+2026-03-11 17:57:40 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:00:01 | INFO | uvicorn.error | Started server process [5972]
+2026-03-11 18:00:01 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:00:01 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:00:01 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:00:02 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:00:02 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:00:18 | INFO | uvicorn.access | 127.0.0.1:64319 - "GET /docs HTTP/1.1" 200
+2026-03-11 18:00:19 | INFO | uvicorn.access | 127.0.0.1:64319 - "GET /openapi.json HTTP/1.1" 200
+2026-03-11 18:00:35 | INFO | uvicorn.access | 127.0.0.1:50207 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:01:10 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 18:01:10 | INFO | uvicorn.access | 127.0.0.1:56306 - "POST /api/chat/?org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:05:38 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 18:05:38 | INFO | uvicorn.access | 127.0.0.1:53841 - "POST /api/chat/?org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:05:55 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 18:05:55 | INFO | sentence_transformers.SentenceTransformer | Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-03-11 18:05:55 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-11 18:05:55 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-03-11 18:05:55 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-11 18:05:55 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-03-11 18:05:56 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-11 18:05:56 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-03-11 18:05:56 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-03-11 18:05:56 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/README.md "HTTP/1.1 200 OK"
+2026-03-11 18:05:56 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-11 18:05:56 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-03-11 18:05:56 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-11 18:05:56 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-03-11 18:05:57 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-03-11 18:05:57 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-11 18:05:57 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-03-11 18:05:58 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-11 18:05:58 | WARNING | huggingface_hub.utils._http | Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-03-11 18:05:58 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-03-11 18:05:58 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-11 18:05:58 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-03-11 18:05:59 | INFO | httpx | HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-03-11 18:05:59 | INFO | httpx | HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-03-11 18:05:59 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-11 18:05:59 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-03-11 18:06:00 | INFO | httpx | HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+2026-03-11 18:06:00 | INFO | chromadb.telemetry.product.posthog | Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-03-11 18:06:01 | INFO | httpx | HTTP Request: GET https://api.trychroma.com/api/v2/auth/identity "HTTP/1.1 200 OK"
+2026-03-11 18:06:01 | INFO | chromadb.telemetry.product.posthog | Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-03-11 18:06:02 | INFO | httpx | HTTP Request: GET https://api.trychroma.com/api/v2/tenants/ff2461a6-04a3-409d-bcc9-e284ce5651f4 "HTTP/1.1 200 OK"
+2026-03-11 18:06:02 | INFO | httpx | HTTP Request: GET https://api.trychroma.com/api/v2/tenants/ff2461a6-04a3-409d-bcc9-e284ce5651f4/databases/front-desk-test "HTTP/1.1 200 OK"
+2026-03-11 18:06:02 | INFO | httpx | HTTP Request: POST https://api.trychroma.com/api/v2/tenants/ff2461a6-04a3-409d-bcc9-e284ce5651f4/databases/front-desk-test/collections "HTTP/1.1 200 OK"
+2026-03-11 18:06:04 | INFO | httpx | HTTP Request: POST https://api.trychroma.com/api/v2/tenants/ff2461a6-04a3-409d-bcc9-e284ce5651f4/databases/front-desk-test/collections/a537c7f9-b9be-415f-8b23-ad1bcd97d92b/query "HTTP/1.1 200 OK"
+2026-03-11 18:06:06 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 18:06:06 | INFO | uvicorn.access | 127.0.0.1:58961 - "POST /api/chat/?org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:09:39 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 18:09:39 | INFO | uvicorn.access | 127.0.0.1:61009 - "POST /api/chat/?org_id=test-org-3 HTTP/1.1" 200
+2026-03-11 18:09:46 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 18:09:46 | INFO | uvicorn.access | 127.0.0.1:57029 - "POST /api/chat/?org_id=test-org-3 HTTP/1.1" 200
+2026-03-11 18:09:56 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 18:09:56 | INFO | uvicorn.access | 127.0.0.1:50298 - "POST /api/chat/?org_id=test-org-3 HTTP/1.1" 200
+2026-03-11 18:12:03 | INFO | uvicorn.error | Shutting down
+2026-03-11 18:12:03 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-11 18:12:03 | INFO | db.connection | MongoDB Disconnected
+2026-03-11 18:12:03 | INFO | utils.redis_memory | Redis disconnected
+2026-03-11 18:12:03 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-11 18:12:03 | INFO | uvicorn.error | Finished server process [5972]
+2026-03-11 18:12:17 | INFO | uvicorn.error | Started server process [22416]
+2026-03-11 18:12:17 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:12:17 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:12:17 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:12:17 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:12:17 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:12:17 | ERROR | uvicorn.error | Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\engage-prototype\.venv\Lib\site-packages\starlette\routing.py", line 701, in lifespan
+    await receive()
+  File "D:\engage-prototype\.venv\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+2026-03-11 18:12:33 | INFO | uvicorn.error | Started server process [28420]
+2026-03-11 18:12:33 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:12:33 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:12:33 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:12:33 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:12:33 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:12:33 | ERROR | uvicorn.error | Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\engage-prototype\.venv\Lib\site-packages\starlette\routing.py", line 701, in lifespan
+    await receive()
+  File "D:\engage-prototype\.venv\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+2026-03-11 18:12:49 | INFO | uvicorn.error | Started server process [21544]
+2026-03-11 18:12:49 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:12:49 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:12:49 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:12:49 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:12:49 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:13:56 | INFO | uvicorn.error | Shutting down
+2026-03-11 18:13:56 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-11 18:13:56 | INFO | db.connection | MongoDB Disconnected
+2026-03-11 18:13:56 | INFO | utils.redis_memory | Redis disconnected
+2026-03-11 18:13:56 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-11 18:13:56 | INFO | uvicorn.error | Finished server process [21544]
+2026-03-11 18:14:10 | INFO | uvicorn.error | Started server process [23548]
+2026-03-11 18:14:10 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:14:10 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:14:10 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:14:10 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:14:10 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:17:25 | INFO | uvicorn.error | Shutting down
+2026-03-11 18:17:25 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-11 18:17:25 | INFO | db.connection | MongoDB Disconnected
+2026-03-11 18:17:25 | INFO | utils.redis_memory | Redis disconnected
+2026-03-11 18:17:25 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-11 18:17:25 | INFO | uvicorn.error | Finished server process [23548]
+2026-03-11 18:17:39 | INFO | uvicorn.error | Started server process [29620]
+2026-03-11 18:17:39 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:17:39 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:17:39 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:17:39 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:17:39 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:18:22 | INFO | uvicorn.error | Shutting down
+2026-03-11 18:18:22 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-11 18:18:22 | INFO | db.connection | MongoDB Disconnected
+2026-03-11 18:18:22 | INFO | utils.redis_memory | Redis disconnected
+2026-03-11 18:18:22 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-11 18:18:22 | INFO | uvicorn.error | Finished server process [29620]
+2026-03-11 18:18:36 | INFO | uvicorn.error | Started server process [29096]
+2026-03-11 18:18:36 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:18:36 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:18:36 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:18:36 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:18:36 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:18:36 | ERROR | uvicorn.error | Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\engage-prototype\.venv\Lib\site-packages\starlette\routing.py", line 701, in lifespan
+    await receive()
+  File "D:\engage-prototype\.venv\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+2026-03-11 18:18:52 | INFO | uvicorn.error | Started server process [22036]
+2026-03-11 18:18:52 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:18:52 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:18:52 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:18:52 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:18:52 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:18:52 | INFO | uvicorn.error | Shutting down
+2026-03-11 18:18:53 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-11 18:18:53 | INFO | db.connection | MongoDB Disconnected
+2026-03-11 18:18:53 | INFO | utils.redis_memory | Redis disconnected
+2026-03-11 18:18:53 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-11 18:18:53 | INFO | uvicorn.error | Finished server process [22036]
+2026-03-11 18:19:06 | INFO | uvicorn.error | Started server process [22484]
+2026-03-11 18:19:06 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:19:06 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:19:06 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:19:06 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:19:06 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:19:06 | INFO | uvicorn.access | 127.0.0.1:58441 - "GET /api/chat_history/?thread_id=test&org_id=test-org-3 HTTP/1.1" 500
+2026-03-11 18:19:57 | INFO | uvicorn.access | 127.0.0.1:64859 - "GET /api/chat_history/?thread_id=test&org_id=test-org-3 HTTP/1.1" 500
+2026-03-11 18:19:57 | INFO | uvicorn.error | Shutting down
+2026-03-11 18:19:58 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-11 18:19:58 | INFO | db.connection | MongoDB Disconnected
+2026-03-11 18:19:58 | INFO | utils.redis_memory | Redis disconnected
+2026-03-11 18:19:58 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-11 18:19:58 | INFO | uvicorn.error | Finished server process [22484]
+2026-03-11 18:20:11 | INFO | uvicorn.error | Started server process [7852]
+2026-03-11 18:20:11 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:20:11 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:20:11 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:20:11 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:20:11 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:20:11 | INFO | uvicorn.access | 127.0.0.1:62937 - "GET /api/chat_history/?thread_id=test&org_id=test-org-3 HTTP/1.1" 200
+2026-03-11 18:20:36 | INFO | uvicorn.access | 127.0.0.1:54316 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:20:38 | INFO | uvicorn.access | 127.0.0.1:54316 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:20:39 | INFO | uvicorn.access | 127.0.0.1:54316 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:20:39 | INFO | uvicorn.access | 127.0.0.1:54316 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:20:40 | INFO | uvicorn.access | 127.0.0.1:54316 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:20:40 | INFO | uvicorn.access | 127.0.0.1:54316 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:20:40 | INFO | uvicorn.access | 127.0.0.1:54316 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:20:40 | INFO | uvicorn.access | 127.0.0.1:54316 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:20:40 | INFO | uvicorn.access | 127.0.0.1:54316 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:20:40 | INFO | uvicorn.access | 127.0.0.1:54316 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:20:41 | INFO | uvicorn.access | 127.0.0.1:54316 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:20:47 | INFO | uvicorn.error | Shutting down
+2026-03-11 18:20:47 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-11 18:20:47 | INFO | db.connection | MongoDB Disconnected
+2026-03-11 18:20:47 | INFO | utils.redis_memory | Redis disconnected
+2026-03-11 18:20:47 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-11 18:20:47 | INFO | uvicorn.error | Finished server process [7852]
+2026-03-11 18:21:00 | INFO | uvicorn.error | Started server process [22772]
+2026-03-11 18:21:00 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:21:00 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:21:00 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:21:00 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:21:00 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:26:41 | INFO | uvicorn.error | Shutting down
+2026-03-11 18:26:41 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-11 18:26:41 | INFO | db.connection | MongoDB Disconnected
+2026-03-11 18:26:41 | INFO | utils.redis_memory | Redis disconnected
+2026-03-11 18:26:41 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-11 18:26:41 | INFO | uvicorn.error | Finished server process [22772]
+2026-03-11 18:26:55 | INFO | uvicorn.error | Started server process [19572]
+2026-03-11 18:26:55 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:26:55 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:26:55 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:26:55 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:26:55 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:26:55 | INFO | uvicorn.access | 127.0.0.1:57760 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:31:17 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 18:31:17 | ERROR | graph | [save_to_redis] Redis error: RedisMemoryService.add_message() missing 1 required positional argument: 'content'
+2026-03-11 18:31:17 | INFO | uvicorn.access | 127.0.0.1:55619 - "POST /api/chat/?org_id=test-org-3 HTTP/1.1" 200
+2026-03-11 18:31:23 | INFO | uvicorn.access | 127.0.0.1:52649 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:31:26 | INFO | uvicorn.access | 127.0.0.1:52649 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:31:28 | INFO | uvicorn.access | 127.0.0.1:52649 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:32:06 | INFO | uvicorn.access | 127.0.0.1:51646 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:32:13 | INFO | uvicorn.access | 127.0.0.1:57913 - "GET /api/chat_history/?thread_id=test&org_id=test-org-3 HTTP/1.1" 200
+2026-03-11 18:35:44 | INFO | uvicorn.error | Shutting down
+2026-03-11 18:35:45 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-11 18:35:45 | INFO | db.connection | MongoDB Disconnected
+2026-03-11 18:35:45 | INFO | utils.redis_memory | Redis disconnected
+2026-03-11 18:35:45 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-11 18:35:45 | INFO | uvicorn.error | Finished server process [19572]
+2026-03-11 18:36:00 | INFO | uvicorn.error | Started server process [27192]
+2026-03-11 18:36:00 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:36:00 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:36:00 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:36:00 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:36:00 | INFO | uvicorn.error | Application startup complete.
+2026-03-11 18:36:00 | INFO | uvicorn.access | 127.0.0.1:62168 - "GET /api/chat_history/?thread_id=test&org_id=test-org-3 HTTP/1.1" 200
+2026-03-11 18:36:13 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-11 18:36:13 | INFO | uvicorn.access | 127.0.0.1:56306 - "POST /api/chat/?org_id=test-org-3 HTTP/1.1" 200
+2026-03-11 18:36:26 | INFO | uvicorn.access | 127.0.0.1:61894 - "GET /api/chat_history/?thread_id=test&org_id=test-org-2 HTTP/1.1" 200
+2026-03-11 18:37:32 | INFO | uvicorn.error | Shutting down
+2026-03-11 18:37:32 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-11 18:37:32 | INFO | db.connection | MongoDB Disconnected
+2026-03-11 18:37:32 | INFO | utils.redis_memory | Redis disconnected
+2026-03-11 18:37:32 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-11 18:37:32 | INFO | uvicorn.error | Finished server process [27192]
+2026-03-11 18:37:46 | INFO | uvicorn.error | Started server process [22056]
+2026-03-11 18:37:46 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-11 18:37:46 | INFO | db.connection | MongoDB Connected
+2026-03-11 18:37:46 | INFO | utils.redis_memory | Redis connected
+2026-03-11 18:37:46 | INFO | db.connection | MongoDB indexes created
+2026-03-11 18:37:46 | INFO | uvicorn.error | Application startup complete.

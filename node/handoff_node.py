@@ -1,6 +1,5 @@
 # nodes/handoff_node.py
-from utils import memory
-
+from schema.stateSchema import GraphState
 
 def handoff_node(state, llm):
     """Handle explicit handoff requests with conversation memory."""

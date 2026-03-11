@@ -1,5 +1,5 @@
 # nodes/chat_node.py
-from utils import memory
+from schema.stateSchema import GraphState
 
 CHAT_SYSTEM_PROMPT = (
     "You are a friendly hotel front-desk assistant. "
@@ -8,7 +8,7 @@ CHAT_SYSTEM_PROMPT = (
 )
 
 
-def chat_node(state, llm):
+def chat_node(state: GraphState, llm):
     print("chat node executed")
     """Handle general chat/small talk with conversation memory."""
     query = state.get("message", "")

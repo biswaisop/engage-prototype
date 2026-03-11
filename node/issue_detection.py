@@ -1,5 +1,5 @@
 # node/issue_detection.py
-from utils import memory
+from utils.memory import memory
 
 ISSUE_SYSTEM_PROMPT = (
     "You are a hotel support specialist handling guest complaints. "

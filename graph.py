@@ -1,38 +1,41 @@
 # graph.py
 from langgraph.graph import StateGraph, END
-from model import llm
-from schema import GraphState
+from model.llm import llm
+from schema.stateSchema import GraphState
 from utils.redis_memory import RedisMemoryService
-from node import intent_router_node
-from node import rag_node
-from node import lead_node
-from node import issue_node
-from node import handoff_node
-from node import chat_node
+from node.router import intent_router_node
+from node.rag import rag_node
+from node.lead_detection import lead_node
+from node.issue_detection import issue_node
+from node.handoff_node import handoff_node
+from node.chat_node import chat_node
+import logging
 # from langgraph.checkpoint.memory import InMemorySaver
 from redis.exceptions import ConnectionError as RedisConnectionError
 # checkpointer = InMemorySaver()
 
 # Initialize Redis memory (module-level singleton)
-redis_memory = RedisMemoryService(max_messages=20, ttl_seconds=259200)
+# redis_memory = RedisMemoryService(max_messages=20, ttl_seconds=259200)
+
+logger = logging.getLogger(__name__)
 
 
-
-def load_context(state: GraphState) -> GraphState:
+async def load_context(state: GraphState) -> GraphState:
     """Load conversation context from Redis"""
     thread_id = state.get("thread_id", "")
-    print(f"[load_context] thread_id: {thread_id}")  # Debug
+    org_id = state.get("org_id", "")
+    redis_memory = state.get("redis_memory")
+    if not redis_memory:
+        state["context"] = ""
+        return state
     try:
         if thread_id:
-            context = redis_memory.get_context_string(thread_id, limit=6)
-            
-            # ✅ Hard cap context at 1000 chars to prevent bloat
+            context = await redis_memory.get_context_string(thread_id,org_id, limit=6)
             if context and len(context) > 1000:
                 context = context[-1000:]
-            print(f"[load_context] loaded context: {context[:100] if context else 'empty'}")  # Debug
             state["context"] = context or ""
     except RedisConnectionError as e:
-        print(f"[load_context] Redis connection error: {e}")
+        logger.error(f"[load_context] Redis error: {e}")
         state["context"] = ""
     
     except Exception as e:
@@ -41,36 +44,40 @@ def load_context(state: GraphState) -> GraphState:
     
     return state
 
-def save_to_redis(state: GraphState) -> GraphState:
+async def save_to_redis(state: GraphState) -> GraphState:
     """Save interaction to Redis"""
     thread_id = state.get("thread_id", "")
-    print(f"[save_to_redis] thread_id: {thread_id}")  # Debug
+    org_id = state.get("org_id", "")
+    redis_memory = state.get("redis_memory")
+
+    logger.info(f"[save_to_redis] thread_id={thread_id} org_id={org_id} redis_memory={redis_memory}")  # ← add this
+
+    if not thread_id or not redis_memory:
+        logger.warning("[save_to_redis] Skipping")
+        return state
     try:
-        if not thread_id:
-            print("[save_to_redis] No thread_id, skipping save")  # Debug
-            return state
+        # if not thread_id:
+        #     print("[save_to_redis] No thread_id, skipping save")  # Debug
+        #     return state
         
         message = state.get("message", "").strip()
         response = state.get("result", {}).get("response", "").strip()
         intent = state.get("intent", "")
         
-        print(f"[save_to_redis] message: {message[:50] if message else 'empty'}")  # Debug
-        print(f"[save_to_redis] response: {response[:50] if response else 'empty'}")  # Debug
+       
         
         # Save user message
         if message:
-            redis_memory.add_message(thread_id, "user", message)
-            print(f"[save_to_redis] Saved user message")  # Debug
+            await redis_memory.add_message(thread_id,org_id, "user", message)
         
         # Save assistant response
         if response:
-            redis_memory.add_message(thread_id, "assistant", response, {"intent": intent})
-            print(f"[save_to_redis] Saved assistant response")  # Debug
+            await redis_memory.add_message(thread_id, org_id, "assistant", response, {"intent": intent})
         state.pop("messages", None)
     except RedisConnectionError as e:
-        print(f"[save_to_redis] Redis connection error: {e}")
+        logger.error(f"[save_to_redis] Redis error: {e}")
     except Exception as e:
-        print(f"[save_to_redis] Redis error: {e}")
+        logger.error(f"[save_to_redis] Redis error: {e}")
     
     return state
 
