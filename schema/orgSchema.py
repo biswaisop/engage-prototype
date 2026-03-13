@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from enum import Enum
 
 class PlanType(str, Enum):
-    FREE = "enterprise"
+    FREE = "free"
     STARTER = "starter"
     PRO = "pro"
     ENTERPRISE = "enterprise"
@@ -38,8 +38,8 @@ class Organization(BaseModel):
 
     #status
     is_active: bool = True
-    created_at: datetime = Field(default_factory=datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 print(datetime.now(timezone.utc))

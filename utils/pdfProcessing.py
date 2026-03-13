@@ -24,8 +24,8 @@ class PDFprocessor:
 
         text = " ".join(text.split())
 
-        text = text.replace('fi', 'fi')
-        text = text.replace('fl', 'fl')
+        text = text.replace('\ufb01', 'fi')
+        text = text.replace('\ufb02', 'fl')
 
         return text
     

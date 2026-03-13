@@ -52,7 +52,7 @@ class DocxProcessor:
                                     "char_count":len(cleaned_text)
                                 }]
                             )
-            processed_chunks.extend(chunks)
+                processed_chunks.extend(chunks)
             return processed_chunks
         
 if __name__ == '__main__':

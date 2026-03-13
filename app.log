@@ -434,3 +434,95 @@ asyncio.exceptions.CancelledError
 2026-03-11 18:37:46 | INFO | utils.redis_memory | Redis connected
 2026-03-11 18:37:46 | INFO | db.connection | MongoDB indexes created
 2026-03-11 18:37:46 | INFO | uvicorn.error | Application startup complete.
+2026-03-13 12:00:54 | INFO | uvicorn.error | Started server process [15720]
+2026-03-13 12:00:54 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-13 12:00:54 | INFO | db.connection | MongoDB Connected
+2026-03-13 12:00:54 | INFO | utils.redis_memory | Redis connected
+2026-03-13 12:00:55 | INFO | db.connection | MongoDB indexes created
+2026-03-13 12:00:55 | INFO | uvicorn.error | Application startup complete.
+2026-03-13 12:01:19 | INFO | uvicorn.error | Shutting down
+2026-03-13 12:01:19 | INFO | uvicorn.error | Waiting for application shutdown.
+2026-03-13 12:01:19 | INFO | db.connection | MongoDB Disconnected
+2026-03-13 12:01:19 | INFO | utils.redis_memory | Redis disconnected
+2026-03-13 12:01:19 | INFO | uvicorn.error | Application shutdown complete.
+2026-03-13 12:01:19 | INFO | uvicorn.error | Finished server process [15720]
+2026-03-13 12:01:45 | INFO | uvicorn.error | Started server process [13116]
+2026-03-13 12:01:45 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-13 12:01:45 | INFO | db.connection | MongoDB Connected
+2026-03-13 12:01:45 | INFO | utils.redis_memory | Redis connected
+2026-03-13 12:01:45 | INFO | db.connection | MongoDB indexes created
+2026-03-13 12:01:45 | INFO | uvicorn.error | Application startup complete.
+2026-03-13 12:01:45 | ERROR | uvicorn.error | Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\engage-prototype\.venv\Lib\site-packages\starlette\routing.py", line 701, in lifespan
+    await receive()
+  File "D:\engage-prototype\.venv\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+2026-03-13 12:02:07 | INFO | uvicorn.error | Started server process [5552]
+2026-03-13 12:02:07 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-13 12:02:07 | INFO | db.connection | MongoDB Connected
+2026-03-13 12:02:07 | INFO | utils.redis_memory | Redis connected
+2026-03-13 12:02:07 | INFO | db.connection | MongoDB indexes created
+2026-03-13 12:02:07 | INFO | uvicorn.error | Application startup complete.
+2026-03-13 12:02:07 | ERROR | uvicorn.error | Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\engage-prototype\.venv\Lib\site-packages\starlette\routing.py", line 701, in lifespan
+    await receive()
+  File "D:\engage-prototype\.venv\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+2026-03-13 12:02:26 | INFO | uvicorn.error | Started server process [25140]
+2026-03-13 12:02:26 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-13 12:02:26 | INFO | db.connection | MongoDB Connected
+2026-03-13 12:02:26 | INFO | utils.redis_memory | Redis connected
+2026-03-13 12:02:26 | INFO | db.connection | MongoDB indexes created
+2026-03-13 12:02:26 | INFO | uvicorn.error | Application startup complete.

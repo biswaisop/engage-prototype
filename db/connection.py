@@ -62,6 +62,10 @@ class MongoDb:
     def issues(cls) -> AsyncIOMotorCollection:
         return cls.get_db()["issues"]
     
+    @classmethod
+    def docs(cls) -> AsyncIOMotorCollection:
+        return cls.get_db()["docs"]
+    
     # @classmethod
     # def conversations(cls) -> AsyncIOMotorCollection:
     #     return cls.get_db()["conversations"]
@@ -98,6 +102,10 @@ class MongoDb:
         await cls.issues().create_index(
             [("org_id", 1), ("status", 1)]
         )
+
+        await cls.docs().create_index("doc_id", unique=True)
+        await cls.docs().create_index("org_id")
+        await cls.docs().create_index([("org_id", 1), ("status", 1)])
 
         logger.info("MongoDB indexes created")
 
