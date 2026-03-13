@@ -184,4 +184,5 @@ dependencies = [
     "zipp==3.23.0",
     "zstandard==0.25.0",
     "motor>=3.7.1",
+    "boto3>=1.42.67",
 ]
