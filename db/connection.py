@@ -65,11 +65,7 @@ class MongoDb:
     @classmethod
     def docs(cls) -> AsyncIOMotorCollection:
         return cls.get_db()["docs"]
-    
-    # @classmethod
-    # def conversations(cls) -> AsyncIOMotorCollection:
-    #     return cls.get_db()["conversations"]
-    
+
     @classmethod
     async def ping(cls) -> bool:
         try:

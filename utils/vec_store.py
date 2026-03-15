@@ -32,7 +32,9 @@ class Vector_store_service:
                 embedding_function = self.embedding_model
             )
         except Exception as e:
-            return RuntimeError (f"failed to initialize for org {self.collection}: {str(e)}")
+            raise RuntimeError (
+                f"failed to initialize for org {self.collection}: {str(e)}"
+            )
     def embed_documents(self, chunks:List[Document], batch_size:int = 100):
         if not chunks:
             raise ValueError("No documents provided for embedding")

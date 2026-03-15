@@ -185,4 +185,5 @@ dependencies = [
     "zstandard==0.25.0",
     "motor>=3.7.1",
     "boto3>=1.42.67",
+    "boto3-stubs~=1.42.67",
 ]
