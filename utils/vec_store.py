@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import os
 
 
+
 load_dotenv()
 
 class Vector_store_service:
@@ -35,7 +36,7 @@ class Vector_store_service:
             raise RuntimeError (
                 f"failed to initialize for org {self.collection}: {str(e)}"
             )
-    def embed_documents(self, chunks:List[Document], batch_size:int = 100):
+    def embed_documents(self, chunks:List[Document], batch_size:int = 100, doc_id:str = None):
         if not chunks:
             raise ValueError("No documents provided for embedding")
         collection = self.get_collection()
@@ -47,7 +48,11 @@ class Vector_store_service:
         for chunk in chunks:
             ids.append(str(uuid.uuid4()))
             texts.append(chunk.page_content)
-            metadata.append(chunk.metadata or {})
+            # metadata.append(chunk.metadata or {})
+            meta = chunk.medata or {}
+            if doc_id:
+                meta["doc_id"] = doc_id
+            metadata.append(meta)
 
         total = len(ids)
         embedded_count = 0

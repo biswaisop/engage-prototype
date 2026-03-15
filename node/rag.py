@@ -1,7 +1,7 @@
 from utils.vec_store import Vector_store_service
 from model.llm import llm
 import hashlib
-
+import asyncio
 
 RAG_SYSTEM_PROMPT = (
             """You are a strict policy assistant.
@@ -71,7 +71,7 @@ class rag_node:
                         return f"{last_user_msg} {query}"
         return query
 
-    def rag_node(self, state: dict):
+    async def rag_node(self, state: dict):
         """
         RAG node - retrieves context and generates response.
         Uses shared memory utility for efficient history management.
@@ -97,7 +97,9 @@ class rag_node:
             
             # Retrieve from vector store using enhanced query
             vector_store = Vector_store_service(org_id)
-            retrieved = vector_store.retrieve_documents(query=enhanced_query)
+            retrieved = await asyncio.to_thread(
+                vector_store.retrieve_documents(query=enhanced_query)
+            )
             
             # # Get history for LLM context
             # history = memory.get_history(state, max_turns=4)

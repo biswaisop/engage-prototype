@@ -91,7 +91,7 @@ rag = rag_node()
 # Add nodes
 builder.add_node("load_context", load_context)
 builder.add_node("intent_router", lambda s: intent_router_node(s, llm))
-builder.add_node("rag_node", lambda s: rag.rag_node(s))
+builder.add_node("rag_node",  rag.rag_node)
 builder.add_node("lead_node", lambda s: lead_node(s, llm))
 builder.add_node("issue_node", lambda s: issue_node(s, llm))
 builder.add_node("handoff_node", lambda s: handoff_node(s, llm))
