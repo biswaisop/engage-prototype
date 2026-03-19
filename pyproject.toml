@@ -186,4 +186,5 @@ dependencies = [
     "motor>=3.7.1",
     "boto3>=1.42.67",
     "boto3-stubs~=1.42.67",
+    "python-multipart>=0.0.22",
 ]

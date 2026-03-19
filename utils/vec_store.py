@@ -49,7 +49,7 @@ class Vector_store_service:
             ids.append(str(uuid.uuid4()))
             texts.append(chunk.page_content)
             # metadata.append(chunk.metadata or {})
-            meta = chunk.medata or {}
+            meta = chunk.metadata or {}
             if doc_id:
                 meta["doc_id"] = doc_id
             metadata.append(meta)

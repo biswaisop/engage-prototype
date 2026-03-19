@@ -98,7 +98,7 @@ class rag_node:
             # Retrieve from vector store using enhanced query
             vector_store = Vector_store_service(org_id)
             retrieved = await asyncio.to_thread(
-                vector_store.retrieve_documents(query=enhanced_query)
+                vector_store.retrieve_documents, enhanced_query
             )
             
             # # Get history for LLM context

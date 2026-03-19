@@ -15,7 +15,7 @@ class S3Service:
         if cls._client is None:
             cls._client = boto3.client(
                 "s3",
-                region_name = os.getenv("AWS_REGION", "us_east_1"),
+                region_name = os.getenv("AWS_REGION", "us_east-1"),
                 aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
                 aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
             )
@@ -36,6 +36,30 @@ class S3Service:
             return s3_key
         except Exception as e:
             logger.error(f"[S3] Upload failed: {e}")
+            raise
+
+    @classmethod
+    def upload_file(cls, file_path: str, s3_key: str) -> str:
+        """Upload file to s3 from local file path"""
+
+        try:
+            content_type_map = {
+            ".pdf": "application/pdf",
+            ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+            ext = os.path.splitext(file_path)[1].lower()
+            content_type = content_type_map.get(ext, "applications/octet-stream")
+
+            cls.get_client().upload_file(
+                file_path,
+                os.getenv("S3_BUCKET"),
+                s3_key,
+                ExtraArgs={"ContentType": content_type}
+            )
+            logger.info(f"[S3] Uploaded file → {s3_key}")
+            return s3_key
+        except Exception as e:
+            logger.error(f"[S3] File upload failed: {e}")
             raise
     
     @classmethod

@@ -2,6 +2,8 @@ import logging
 from logging.handlers import RotatingFileHandler
 from utils.redis_memory import RedisClient 
 
+
+
 # ── Logging setup ─────────────────────────────────────────────────
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
@@ -26,6 +28,7 @@ for uvicorn_logger in ("uvicorn", "uvicorn.access", "uvicorn.error", "fastapi"):
 from fastapi import FastAPI
 from routes.chat_service import router as chat_service_router
 from routes.chat_history import router as chat_history_router
+from routes.docs import router as docs_router
 from contextlib import asynccontextmanager
 from db.connection import MongoDb
 
@@ -70,6 +73,13 @@ app.include_router(
     chat_history_router,
     prefix="/api/chat_history",
     tags = ["chat-history"]
+)
+
+#include docs router
+app.include_router(
+    docs_router,
+    prefix="/api/docs",
+    tags=["docs"]
 )
 
 
