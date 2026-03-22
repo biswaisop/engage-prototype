@@ -76,3 +76,105 @@
 2026-03-19 16:03:46 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
 2026-03-19 16:03:46 | INFO | graph | [save_to_redis] thread_id=test-thread-3 org_id=test-org-3 redis_memory=<utils.redis_memory.RedisMemoryService object at 0x000001C32A167260>
 2026-03-19 16:03:46 | INFO | uvicorn.access | 127.0.0.1:64976 - "POST /api/chat/?org_id=test-org-3 HTTP/1.1" 200
+2026-03-19 23:24:54 | INFO | uvicorn.error | Started server process [6480]
+2026-03-19 23:24:54 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-19 23:24:55 | INFO | db.connection | MongoDB Connected
+2026-03-19 23:24:55 | INFO | utils.redis_memory | Redis connected
+2026-03-19 23:24:55 | INFO | db.connection | MongoDB indexes created
+2026-03-19 23:24:55 | INFO | uvicorn.error | Application startup complete.
+2026-03-19 23:24:55 | ERROR | uvicorn.error | Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\engage-prototype\.venv\Lib\site-packages\starlette\routing.py", line 701, in lifespan
+    await receive()
+  File "D:\engage-prototype\.venv\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+2026-03-19 23:25:27 | INFO | uvicorn.error | Started server process [22824]
+2026-03-19 23:25:27 | INFO | uvicorn.error | Waiting for application startup.
+2026-03-19 23:25:27 | INFO | db.connection | MongoDB Connected
+2026-03-19 23:25:27 | INFO | utils.redis_memory | Redis connected
+2026-03-19 23:25:27 | INFO | db.connection | MongoDB indexes created
+2026-03-19 23:25:27 | INFO | uvicorn.error | Application startup complete.
+2026-03-19 23:26:45 | INFO | uvicorn.access | 127.0.0.1:54227 - "GET /docs HTTP/1.1" 200
+2026-03-19 23:26:46 | INFO | uvicorn.access | 127.0.0.1:54227 - "GET /openapi.json HTTP/1.1" 200
+2026-03-19 23:27:22 | INFO | uvicorn.access | 127.0.0.1:58915 - "POST /api/docs/upload HTTP/1.1" 404
+2026-03-19 23:27:46 | INFO | uvicorn.access | 127.0.0.1:50955 - "POST /api/docs/upload HTTP/1.1" 404
+2026-03-19 23:28:44 | INFO | uvicorn.access | 127.0.0.1:58721 - "POST /api/docs/upload HTTP/1.1" 200
+2026-03-19 23:28:47 | INFO | sentence_transformers.SentenceTransformer | Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-03-19 23:28:47 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-19 23:28:47 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-03-19 23:28:47 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-19 23:28:47 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-03-19 23:28:48 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-19 23:28:48 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-03-19 23:28:48 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-03-19 23:28:48 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/README.md "HTTP/1.1 200 OK"
+2026-03-19 23:28:49 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-19 23:28:49 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-03-19 23:28:49 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-19 23:28:49 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-03-19 23:28:49 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-03-19 23:28:49 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-19 23:28:49 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-03-19 23:28:51 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-19 23:28:51 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-03-19 23:28:51 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-19 23:28:51 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-03-19 23:28:52 | INFO | httpx | HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-03-19 23:28:52 | INFO | httpx | HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-03-19 23:28:53 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-19 23:28:53 | INFO | httpx | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-03-19 23:28:53 | INFO | httpx | HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+2026-03-19 23:28:54 | INFO | chromadb.telemetry.product.posthog | Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-03-19 23:28:55 | INFO | httpx | HTTP Request: GET https://api.trychroma.com/api/v2/auth/identity "HTTP/1.1 200 OK"
+2026-03-19 23:28:55 | INFO | chromadb.telemetry.product.posthog | Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-03-19 23:28:56 | INFO | httpx | HTTP Request: GET https://api.trychroma.com/api/v2/tenants/ff2461a6-04a3-409d-bcc9-e284ce5651f4 "HTTP/1.1 200 OK"
+2026-03-19 23:28:57 | INFO | httpx | HTTP Request: GET https://api.trychroma.com/api/v2/tenants/ff2461a6-04a3-409d-bcc9-e284ce5651f4/databases/front-desk-test "HTTP/1.1 200 OK"
+2026-03-19 23:28:57 | INFO | httpx | HTTP Request: POST https://api.trychroma.com/api/v2/tenants/ff2461a6-04a3-409d-bcc9-e284ce5651f4/databases/front-desk-test/collections "HTTP/1.1 200 OK"
+2026-03-19 23:28:59 | INFO | httpx | HTTP Request: GET https://api.trychroma.com/api/v2/pre-flight-checks "HTTP/1.1 200 OK"
+2026-03-19 23:29:00 | INFO | httpx | HTTP Request: POST https://api.trychroma.com/api/v2/tenants/ff2461a6-04a3-409d-bcc9-e284ce5651f4/databases/front-desk-test/collections/42b41ed8-6334-4219-b3ed-3b6d58428776/add "HTTP/1.1 201 Created"
+2026-03-19 23:29:01 | INFO | utils.s3 | S3 client initialized
+2026-03-19 23:29:03 | INFO | routes.docs | [docs] Completed — org=test-org-3 doc=1aa2f9aa-b092-4bd3-8fba-767a9d692188 chunks=10
+2026-03-19 23:29:03 | INFO | routes.docs | [docs] Temp file deleted — C:\Users\monda\AppData\Local\Temp\tmp801e2sh0.pdf
+2026-03-19 23:33:44 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-19 23:33:44 | INFO | chromadb.telemetry.product.posthog | Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-03-19 23:33:45 | INFO | httpx | HTTP Request: GET https://api.trychroma.com/api/v2/auth/identity "HTTP/1.1 200 OK"
+2026-03-19 23:33:45 | INFO | chromadb.telemetry.product.posthog | Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-03-19 23:33:46 | INFO | httpx | HTTP Request: GET https://api.trychroma.com/api/v2/tenants/ff2461a6-04a3-409d-bcc9-e284ce5651f4 "HTTP/1.1 200 OK"
+2026-03-19 23:33:46 | INFO | httpx | HTTP Request: GET https://api.trychroma.com/api/v2/tenants/ff2461a6-04a3-409d-bcc9-e284ce5651f4/databases/front-desk-test "HTTP/1.1 200 OK"
+2026-03-19 23:33:46 | INFO | httpx | HTTP Request: POST https://api.trychroma.com/api/v2/tenants/ff2461a6-04a3-409d-bcc9-e284ce5651f4/databases/front-desk-test/collections "HTTP/1.1 200 OK"
+2026-03-19 23:33:48 | INFO | httpx | HTTP Request: POST https://api.trychroma.com/api/v2/tenants/ff2461a6-04a3-409d-bcc9-e284ce5651f4/databases/front-desk-test/collections/42b41ed8-6334-4219-b3ed-3b6d58428776/query "HTTP/1.1 200 OK"
+2026-03-19 23:33:48 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-19 23:33:48 | INFO | graph | [save_to_redis] thread_id=test-thread-4 org_id=test-org-3 redis_memory=<utils.redis_memory.RedisMemoryService object at 0x0000018393D72B70>
+2026-03-19 23:33:48 | INFO | uvicorn.access | 127.0.0.1:62658 - "POST /api/chat/?org_id=test-org-3 HTTP/1.1" 200
+2026-03-19 23:34:22 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-19 23:34:22 | INFO | graph | [save_to_redis] thread_id=test-thread-4 org_id=test-org-3 redis_memory=<utils.redis_memory.RedisMemoryService object at 0x00000183970F48C0>
+2026-03-19 23:34:22 | INFO | uvicorn.access | 127.0.0.1:56907 - "POST /api/chat/?org_id=test-org-3 HTTP/1.1" 200
+2026-03-19 23:34:39 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-19 23:34:40 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-19 23:34:40 | INFO | graph | [save_to_redis] thread_id=test-thread-4 org_id=test-org-3 redis_memory=<utils.redis_memory.RedisMemoryService object at 0x00000183971CBD70>
+2026-03-19 23:34:40 | INFO | uvicorn.access | 127.0.0.1:59734 - "POST /api/chat/?org_id=test-org-3 HTTP/1.1" 200

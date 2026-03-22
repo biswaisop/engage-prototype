@@ -25,7 +25,6 @@ RAG_SYSTEM_PROMPT = (
     Do not provide partial guesses.
     Answer concisely.
 """
-
 )
 
 
