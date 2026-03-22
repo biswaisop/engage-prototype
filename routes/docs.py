@@ -170,12 +170,12 @@ async def delete_document(org_id: str, doc_id: str):
         
         await asyncio.to_thread(S3Service.delete, doc["s3_key"])
         
-        vector_store = Vector_store_service(org_id=org_id)
-        collection = await asyncio.to_thread(vector_store.get_collection)
-        await asyncio.to_thread(
-            collection.delete,
-            where = {"doc_id": doc_id}
-        )
+        def delete_from_chroma():
+            vector_store = Vector_store_service(org_id=org_id)
+            collection = vector_store.get_collection()
+            collection.delete(where={"doc_id": doc_id})
+        
+        await asyncio.to_thread(delete_from_chroma)
         
         await MongoDb.docs().delete_one({"doc_id": doc_id, "org_id": org_id})
         
@@ -184,3 +184,15 @@ async def delete_document(org_id: str, doc_id: str):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete document: {str(e)}")
+    
+@router.get("/list_docs/{org_id}")
+async def list_document(org_id: str):
+    try:
+        cursor = MongoDb.docs().find(
+            {"org_id": org_id},
+            {"_id": 0}
+        ).sort("created_at", -1)
+        docs = await cursor.to_list(length = 100)
+        return {"org_id": org_id, "documents": docs}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to list documents: {str(e)}")

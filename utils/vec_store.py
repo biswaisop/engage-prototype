@@ -11,19 +11,35 @@ import os
 load_dotenv()
 
 class Vector_store_service:
+    
+    _embedding_model = None
+    _chromadb_client = None
+    
+    @classmethod
+    def get_chromadb_client(cls):
+        if cls._chromadb_client is None:
+            chroma_api_key = os.getenv("CHROMADB_API_KEY")
+            chroma_tenant = os.getenv("CHROMADB_TENANT")
+            database = os.getenv("VECTOR_DB")
+            cls._chromadb_client = chromadb.CloudClient(
+                tenant=chroma_tenant,
+                api_key=chroma_api_key,
+                database=database
+            )
+        return cls._chromadb_client
+    
+    @classmethod
+    def get_embedding_model(cls):
+        if cls._embedding_model is None:
+            cls._embedding_model = embedding_functions.SentenceTransformerEmbeddingFunction(
+                                    model_name=os.getenv("EMBEDDING_MODEL")
+            )
+        return cls._embedding_model
+    
     def __init__(self, org_id):
         self.collection = org_id
-        self.chroma_api_key = os.getenv("CHROMADB_API_KEY")
-        self.chroma_tenant = os.getenv("CHROMADB_TENANT")
-        self.database = os.getenv("VECTOR_DB")
-        self.embedding_model =  embedding_functions.SentenceTransformerEmbeddingFunction(
-                                    model_name=os.getenv("EMBEDDING_MODEL")
-        )
-        self.client = chromadb.CloudClient(
-            tenant=self.chroma_tenant,
-            api_key=self.chroma_api_key,
-            database=self.database
-        )
+        self.embedding_model =  self.get_embedding_model()
+        self.client = self.get_chromadb_client()
         
 
     def get_collection(self):

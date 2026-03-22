@@ -1,7 +1,3 @@
-
-Routes · MD
-Copy
-
 # API Routes Reference — Front Desk AI
 
 ## Base URL
