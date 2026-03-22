@@ -27,7 +27,7 @@ class DocRecord(BaseModel):
     file_type: DocType
     s3_key: str
     status: DocStatus = DocStatus.PENDING
-    chunk_count: Optional[str]
+    chunk_count: Optional[int] = None
     error: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     completed_at: Optional[datetime] = None
