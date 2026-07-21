@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Query, HTTPException, Depends
-from utils.redis_memory import RedisMemoryService
+from services.redis_memory import RedisMemoryService
 from schema.chatSchema import chatHistoryResponse
 from dependency.dependencies import get_redis_memory
 

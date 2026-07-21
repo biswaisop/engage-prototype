@@ -1,5 +1,5 @@
 from fastapi import Depends, Query, HTTPException
-from utils.redis_memory import RedisMemoryService
+from services.redis_memory import RedisMemoryService
 from db.connection import MongoDb
 
 

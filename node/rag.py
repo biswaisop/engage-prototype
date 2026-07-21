@@ -1,7 +1,10 @@
-from utils.vec_store import Vector_store_service
+from services.vec_store import Vector_store_service
 from model.llm import llm
 import hashlib
 import asyncio
+import logging
+
+logger = logging.getLogger(__name__)
 
 RAG_SYSTEM_PROMPT = (
             """You are a strict policy assistant.
@@ -105,6 +108,7 @@ class rag_node:
             # formatted_history = memory.format_for_llm(history)
             
             if retrieved.get("status") != "success":
+                logger.error(f"[rag_node] Retrieval failed: {retrieved.get('error')}")
                 response_text = "Knowledge base temporarily unavailable."
                 return {
                     **state,

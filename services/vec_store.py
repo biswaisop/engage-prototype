@@ -1,5 +1,6 @@
 from langchain_core.documents import Document
 from typing import List
+from services.embedding import HFEmbeddingFunction
 import chromadb
 from chromadb.utils import embedding_functions
 import uuid
@@ -31,8 +32,9 @@ class Vector_store_service:
     @classmethod
     def get_embedding_model(cls):
         if cls._embedding_model is None:
-            cls._embedding_model = embedding_functions.SentenceTransformerEmbeddingFunction(
-                                    model_name=os.getenv("EMBEDDING_MODEL")
+            cls._embedding_model = HFEmbeddingFunction(
+                api_key=os.getenv("HF_API_KEY"),
+                model_name=os.getenv("EMBEDDING_MODEL")
             )
         return cls._embedding_model
     
@@ -52,6 +54,7 @@ class Vector_store_service:
             raise RuntimeError (
                 f"failed to initialize for org {self.collection}: {str(e)}"
             )
+
     def embed_documents(self, chunks:List[Document], batch_size:int = 100, doc_id:str = None):
         if not chunks:
             raise ValueError("No documents provided for embedding")
@@ -105,7 +108,7 @@ class Vector_store_service:
             }
 
 
-    def retrieve_documents(self, query:str, k:int = 5, thresold:float = 0.7):
+    def retrieve_documents(self, query:str, k:int = 5, thresold:float = 1.0):
         
         if not query or not query.strip():
             raise ValueError("Query cannot be empty")

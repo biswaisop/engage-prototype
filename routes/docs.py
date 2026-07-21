@@ -2,8 +2,8 @@ from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Background
 from schema.docShema import DocRecord, DocResponse, DocStatusResponse, DocType, DocStatus
 from utils.pdfProcessing import PDFprocessor
 from utils.docxProcessor import DocxProcessor
-from utils.vec_store import Vector_store_service
-from utils.s3 import S3Service
+from services.vec_store import Vector_store_service
+from services.s3 import S3Service
 from db.connection import MongoDb
 import tempfile, os, logging, asyncio
 from datetime import datetime, timezone

@@ -19,16 +19,18 @@ class RedisClient:
     def connect(cls):
         if cls._client is None:
             cls._client = aioredis.Redis(
-                host=os.getenv("REDIS_HOST", "localhost"),
+                host=os.getenv("UPSTASH_REDIS_URL"),
                 port=int(os.getenv("REDIS_PORT", 6379)),
+                password= os.getenv("UPSTASH_REDIS_TOKEN"),
+                ssl = True,
                 decode_responses=True
             )
             logger.info("Redis connected")
 
     @classmethod
-    def disconnect(cls):
+    async def disconnect(cls):
         if cls._client is not None:
-            cls._client.close()
+            await cls._client.aclose()
             cls._client = None
             logger.info("Redis disconnected")
 

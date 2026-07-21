@@ -1,6 +1,6 @@
 import logging
 from logging.handlers import RotatingFileHandler
-from utils.redis_memory import RedisClient 
+from services.redis_memory import RedisClient 
 
 
 
@@ -41,7 +41,7 @@ async def lifespan(app: FastAPI):
     await MongoDb.setup_indexes()
     yield
     MongoDb.disconnect()
-    RedisClient.disconnect()
+    await RedisClient.disconnect()
 
 app = FastAPI(lifespan=lifespan)
 

@@ -2,7 +2,7 @@
 from langgraph.graph import StateGraph, END
 from model.llm import llm
 from schema.stateSchema import GraphState
-from utils.redis_memory import RedisMemoryService
+from services.redis_memory import RedisMemoryService
 from node.router import intent_router_node
 from node.rag import rag_node
 from node.lead_detection import lead_node

@@ -2,7 +2,7 @@ from schema.chatSchema import chatMessageResponse, chatMessageRequest
 from schema.stateSchema import GraphState
 from graph import graph
 from fastapi import APIRouter, HTTPException, status, Depends
-from utils.redis_memory import RedisMemoryService
+from services.redis_memory import RedisMemoryService
 from dependency.dependencies import get_redis_memory
 import asyncio
 
