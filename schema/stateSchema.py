@@ -2,7 +2,7 @@ from pydantic import BaseModel, EmailStr
 from typing import List, Optional, Dict, Any, TypedDict, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from utils.redis_memory import RedisMemoryService   
+    from services.redis_memory import RedisMemoryService   
 
 class Action (BaseModel):
     type: str

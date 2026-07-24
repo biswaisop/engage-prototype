@@ -17,3 +17,6 @@ async def get_redis_memory(org_id: str = Query(...)) -> RedisMemoryService:
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to load org config: {str(e)}")
+    
+
+# async def get_db(ord_id: )

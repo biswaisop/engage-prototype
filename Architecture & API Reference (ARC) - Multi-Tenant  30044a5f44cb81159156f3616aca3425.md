@@ -4,11 +4,11 @@
 
 ## Multi-Tenant SaaS AI Chatbot Platform with Human Handoff
 
-**Version:** 1.0  
+**Version:** 1.0
 
-**Target Vertical:** Hospitality Industry  
+**Target Vertical:** Hospitality Industry
 
-**Document Status:** Production-Grade Specification  
+**Document Status:** Production-Grade Specification
 
 **Last Updated:** February 2026
 
@@ -128,18 +128,18 @@ Redis:
 
 ### 2.2 State Transition Table
 
-| Current State | Event | Next State | Trigger |
-| --- | --- | --- | --- |
-| AI_ACTIVE | REQUEST_HUMAN | HUMAN_REQUESTED | LangGraph returns handoff intent |
-| AI_ACTIVE | VISITOR_REQUESTS_HUMAN | HUMAN_REQUESTED | Visitor sends "/human" or clicks button |
-| AI_ACTIVE | END_CONVERSATION | CLOSED | Visitor closes chat or inactivity timeout |
-| HUMAN_REQUESTED | AGENT_ACCEPTS | HUMAN_CONNECTED | Agent accepts via ACCEPT_CHAT |
-| HUMAN_REQUESTED | NO_AGENT_TIMEOUT (5 min) | AI_ACTIVE | No agents available, fallback to AI |
-| HUMAN_REQUESTED | END_CONVERSATION | CLOSED | Visitor closes chat |
-| HUMAN_CONNECTED | AGENT_ENDS | CLOSED | Agent clicks "End Chat" |
-| HUMAN_CONNECTED | VISITOR_ENDS | CLOSED | Visitor closes widget |
-| HUMAN_CONNECTED | AGENT_DISCONNECT | HUMAN_REQUESTED | Agent WebSocket disconnects (network) |
-| CLOSED | VISITOR_REOPENS | AI_ACTIVE | Visitor sends new message (new session) |
+| Current State   | Event                    | Next State      | Trigger                                   |
+| --------------- | ------------------------ | --------------- | ----------------------------------------- |
+| AI_ACTIVE       | REQUEST_HUMAN            | HUMAN_REQUESTED | LangGraph returns handoff intent          |
+| AI_ACTIVE       | VISITOR_REQUESTS_HUMAN   | HUMAN_REQUESTED | Visitor sends "/human" or clicks button   |
+| AI_ACTIVE       | END_CONVERSATION         | CLOSED          | Visitor closes chat or inactivity timeout |
+| HUMAN_REQUESTED | AGENT_ACCEPTS            | HUMAN_CONNECTED | Agent accepts via ACCEPT_CHAT             |
+| HUMAN_REQUESTED | NO_AGENT_TIMEOUT (5 min) | AI_ACTIVE       | No agents available, fallback to AI       |
+| HUMAN_REQUESTED | END_CONVERSATION         | CLOSED          | Visitor closes chat                       |
+| HUMAN_CONNECTED | AGENT_ENDS               | CLOSED          | Agent clicks "End Chat"                   |
+| HUMAN_CONNECTED | VISITOR_ENDS             | CLOSED          | Visitor closes widget                     |
+| HUMAN_CONNECTED | AGENT_DISCONNECT         | HUMAN_REQUESTED | Agent WebSocket disconnects (network)     |
+| CLOSED          | VISITOR_REOPENS          | AI_ACTIVE       | Visitor sends new message (new session)   |
 
 ### 2.3 State-Specific Behavior
 
@@ -153,24 +153,24 @@ Redis:
 
 - Message Routing: Visitor messages stored but NOT sent to AI (queued for agent)
 - Side Effects:
-    - Broadcast to all available agents (org_id scoped)
-    - 5-minute timeout starts
-    - Auto-message to visitor: "An agent will be with you shortly"
+  - Broadcast to all available agents (org_id scoped)
+  - 5-minute timeout starts
+  - Auto-message to visitor: "An agent will be with you shortly"
 
 **HUMAN_CONNECTED**
 
 - Message Routing: Visitor ↔ Agent direct (no AI involvement)
 - Side Effects:
-    - Real-time delivery to both parties
-    - Agent disconnect → automatic re-queue (HUMAN_REQUESTED)
+  - Real-time delivery to both parties
+  - Agent disconnect → automatic re-queue (HUMAN_REQUESTED)
 
 **CLOSED**
 
 - Message Routing: None (conversation archived)
 - Side Effects:
-    - Conversation moved to archive
-    - Cleanup Redis entries
-    - If visitor sends new message → creates NEW conversation
+  - Conversation moved to archive
+  - Cleanup Redis entries
+  - If visitor sends new message → creates NEW conversation
 
 ---
 
@@ -235,10 +235,10 @@ Redis:
 4. Persist message to PostgreSQL
 5. ACK immediately
 6. Route based on conversation state:
-    - AI_ACTIVE → Send to LangGraph
-    - HUMAN_REQUESTED → Queue for agent
-    - HUMAN_CONNECTED → Forward to agent
-    - CLOSED → Reopen conversation
+   - AI_ACTIVE → Send to LangGraph
+   - HUMAN_REQUESTED → Queue for agent
+   - HUMAN_CONNECTED → Forward to agent
+   - CLOSED → Reopen conversation
 
 **Error Responses:**
 
@@ -283,9 +283,9 @@ Redis:
 1. Fetch conversation context
 2. Invoke LangGraph with message + history
 3. Handle intent-based actions:
-    - REQUEST_HUMAN → Initiate handoff
-    - CAPTURE_LEAD → Store lead
-    - ESCALATE_ISSUE → Store issue + auto-escalate if HIGH/CRITICAL
+   - REQUEST_HUMAN → Initiate handoff
+   - CAPTURE_LEAD → Store lead
+   - ESCALATE_ISSUE → Store issue + auto-escalate if HIGH/CRITICAL
 4. Persist AI response
 5. Send to visitor via WebSocket
 6. Stop typing indicator
@@ -294,14 +294,14 @@ Redis:
 
 **Status Values:**
 
-| Status | When Sent | Metadata |
-| --- | --- | --- |
-| `connected` | WebSocket established | `conversation_id`, `state` |
-| `human_requested` | Handoff initiated | `estimated_wait_seconds` |
-| `agent_connected` | Agent accepted chat | `agent_name`, `agent_avatar_url` |
-| `agent_disconnected` | Agent lost connection | `reason` |
-| `no_agents_available` | Timeout, fallback to AI | `wait_time_seconds` |
-| `rate_limited` | Too many messages | `retry_after_seconds` |
+| Status                  | When Sent               | Metadata                             |
+| ----------------------- | ----------------------- | ------------------------------------ |
+| `connected`           | WebSocket established   | `conversation_id`, `state`       |
+| `human_requested`     | Handoff initiated       | `estimated_wait_seconds`           |
+| `agent_connected`     | Agent accepted chat     | `agent_name`, `agent_avatar_url` |
+| `agent_disconnected`  | Agent lost connection   | `reason`                           |
+| `no_agents_available` | Timeout, fallback to AI | `wait_time_seconds`                |
+| `rate_limited`        | Too many messages       | `retry_after_seconds`              |
 
 **Example Messages:**
 
@@ -639,7 +639,7 @@ Redis:
 - Confirmation email sent to visitor
 - Added to agent dashboard calendar
 
-#### GET /api/v1/conversations/{conversation_id}
+#### GET /api/v1/conversations/
 
 **Purpose:** Fetch complete conversation details
 
@@ -842,7 +842,7 @@ If retrieval score < 0.7, recommend handoff:
 if langgraph_response["intent"] == "CAPTURE_LEAD":
     # Send AI response
     await send_ai_message(visitor_socket, response["response"])
-    
+  
     # Execute CREATE_LEAD action
     for action in response["actions"]:
         if action["type"] == "CREATE_LEAD":
@@ -1453,13 +1453,13 @@ def upgrade():
 
 ### State Transitions
 
-| From | To | Trigger |
-| --- | --- | --- |
-| AI_ACTIVE | HUMAN_REQUESTED | REQUEST_HUMAN or visitor clicks "agent" |
-| HUMAN_REQUESTED | HUMAN_CONNECTED | Agent accepts |
-| HUMAN_REQUESTED | AI_ACTIVE | 5-min timeout |
-| HUMAN_CONNECTED | CLOSED | Chat ended |
-| HUMAN_CONNECTED | HUMAN_REQUESTED | Agent disconnects |
+| From            | To              | Trigger                                 |
+| --------------- | --------------- | --------------------------------------- |
+| AI_ACTIVE       | HUMAN_REQUESTED | REQUEST_HUMAN or visitor clicks "agent" |
+| HUMAN_REQUESTED | HUMAN_CONNECTED | Agent accepts                           |
+| HUMAN_REQUESTED | AI_ACTIVE       | 5-min timeout                           |
+| HUMAN_CONNECTED | CLOSED          | Chat ended                              |
+| HUMAN_CONNECTED | HUMAN_REQUESTED | Agent disconnects                       |
 
 ### WebSocket Message Types
 
@@ -1473,12 +1473,12 @@ def upgrade():
 
 ### LangGraph Decisions
 
-| Intent | Backend Action |
-| --- | --- |
-| INFORMATION_RETRIEVAL | Send AI response |
-| CAPTURE_LEAD | Create lead + send response |
-| ESCALATE_ISSUE | Create issue + handoff (if HIGH/CRITICAL) |
-| REQUEST_HUMAN | Transition to HUMAN_REQUESTED |
+| Intent                | Backend Action                            |
+| --------------------- | ----------------------------------------- |
+| INFORMATION_RETRIEVAL | Send AI response                          |
+| CAPTURE_LEAD          | Create lead + send response               |
+| ESCALATE_ISSUE        | Create issue + handoff (if HIGH/CRITICAL) |
+| REQUEST_HUMAN         | Transition to HUMAN_REQUESTED             |
 
 ### Redis Keys
 

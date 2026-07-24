@@ -3,11 +3,6 @@ from typing import List, Any, Dict, Optional
 from enum import Enum
 from datetime import datetime, timezone
 
-# class chatMessageRequest(BaseModel):
-#     thread_id: str
-#     message: str
-#     org_id: str
-
 class ConversationStatus(str, Enum):
     ACTIVE = "ACTIVE"
     ENDED = "ENDED"
@@ -17,6 +12,7 @@ class chatMessageResponse(BaseModel):
     response: str
     thread_id: str
     org_id: str
+    actions: List[Dict[str, Any]] = []
 
 class chatHistoryResponse(BaseModel):
     thread_id: str

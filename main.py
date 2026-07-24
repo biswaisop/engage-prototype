@@ -1,8 +1,8 @@
 import logging
 from logging.handlers import RotatingFileHandler
 from services.redis_memory import RedisClient 
-
-
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
 
 # ── Logging setup ─────────────────────────────────────────────────
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
@@ -25,11 +25,11 @@ for uvicorn_logger in ("uvicorn", "uvicorn.access", "uvicorn.error", "fastapi"):
     logger = logging.getLogger(uvicorn_logger)
     logger.handlers = handlers
     logger.propagate = False
-from fastapi import FastAPI
-from routes.chat_service import router as chat_service_router
-from routes.chat_history import router as chat_history_router
-from routes.docs import router as docs_router
-from contextlib import asynccontextmanager
+    
+    
+
+
+
 from db.connection import MongoDb
 
 logger = logging.getLogger(__name__)
@@ -46,6 +46,11 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
+
+from routes.chat_service import router as chat_service_router
+from routes.chat_history import router as chat_history_router
+from routes.docs import router as docs_router
+from routes.lead_submit import router as lead_router
 
 @app.get("/health")
 async def health():
@@ -80,6 +85,13 @@ app.include_router(
     docs_router,
     prefix="/api/docs",
     tags=["docs"]
+)
+
+#include leads router
+app.include_router(
+    lead_router,
+    prefix="/api/leads",
+    tags=["leads"]
 )
 
 
