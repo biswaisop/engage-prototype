@@ -3,6 +3,7 @@ from logging.handlers import RotatingFileHandler
 from services.redis_memory import RedisClient 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
 # ── Logging setup ─────────────────────────────────────────────────
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
@@ -44,7 +45,7 @@ async def lifespan(app: FastAPI):
     await RedisClient.disconnect()
 
 app = FastAPI(lifespan=lifespan)
-
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=["localhost", "127.0.0.1"])
 
 
 from routes.chat_service import router as chat_service_router

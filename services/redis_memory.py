@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 import os
 import logging
 from dotenv import load_dotenv
+import certifi
 
 load_dotenv()
 
@@ -23,6 +24,7 @@ class RedisClient:
                 port=int(os.getenv("REDIS_PORT", 6379)),
                 password= os.getenv("UPSTASH_REDIS_TOKEN"),
                 ssl = True,
+                ssl_ca_certs=certifi.where(),
                 decode_responses=True
             )
             logger.info("Redis connected")
