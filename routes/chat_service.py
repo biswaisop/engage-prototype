@@ -106,6 +106,15 @@ async def chat_message(
         raise HTTPException(status_code=500, detail=f"Chat processing failed: {str(e)}")
     
 
+
+
+    
+    
+    
+    
+    
+    
+    
 async def process_chat_message(org_id: str, thread_id: str, message: str, redis_memory) -> dict:
     org = await MongoDb.orgs().find_one({"org_id": org_id})
     if not org:
