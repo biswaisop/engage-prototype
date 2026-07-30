@@ -1195,3 +1195,10 @@ asyncio.exceptions.CancelledError
 2026-07-24 00:24:27 | INFO | httpx | HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
 2026-07-24 00:24:27 | INFO | graph | [save_to_redis] thread_id=test-string org_id=test-org-1 redis_memory=<services.redis_memory.RedisMemoryService object at 0x000002CE735FFFE0>
 2026-07-24 00:24:27 | INFO | uvicorn.access | 127.0.0.1:58213 - "POST /api/chat/?org_id=test-org-1 HTTP/1.1" 200
+2026-07-29 23:10:10 | INFO | uvicorn.error | Started server process [29824]
+2026-07-29 23:10:10 | INFO | uvicorn.error | Waiting for application startup.
+2026-07-29 23:10:10 | INFO | db.connection | MongoDB Connected
+2026-07-29 23:10:10 | INFO | services.redis_memory | Redis connected
+2026-07-29 23:10:10 | INFO | db.connection | MongoDB indexes created
+2026-07-29 23:10:10 | INFO | uvicorn.error | Application startup complete.
+2026-07-29 23:11:39 | INFO | uvicorn.access | 127.0.0.1:61629 - "GET /openapi.json HTTP/1.1" 200
